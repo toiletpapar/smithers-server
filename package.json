@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": "nodemon --max_old_space_size=500 ./build/server.js",
-    "start": "node --max_old_space_size=500 ./build/server.js"
+    "devWin": "set GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-636a22f3aaf1.json && nodemon --max_old_space_size=500 ./build/server.js",
+    "start": "GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-636a22f3aaf1.json node --max_old_space_size=500 ./build/server.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@google-cloud/secret-manager": "^4.1.4",
     "express": "^4.18.2"
   }
 }

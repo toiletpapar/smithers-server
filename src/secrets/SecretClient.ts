@@ -1,5 +1,9 @@
 import {SecretManagerServiceClient} from '@google-cloud/secret-manager'
 
+interface GetSecretOptions {
+  secretName: string;
+}
+
 class SecretClient {
   private client: SecretManagerServiceClient
 
@@ -7,9 +11,9 @@ class SecretClient {
     this.client = new SecretManagerServiceClient({})
   }
 
-  public async getSecret(secretName: string) {
+  public async getSecret(opts: GetSecretOptions) {
     const [version] = await this.client.accessSecretVersion({
-      name: `projects/593265247388/secrets/${secretName}/versions/latest`,
+      name: `projects/593265247388/secrets/${opts.secretName}/versions/latest`,
     });
   
     // Extract the payload as a string.

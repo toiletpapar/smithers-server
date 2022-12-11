@@ -13,7 +13,7 @@ app.get('/test', (req, res) => {
 
 app.get('/secret', async (req, res) => {
   try {
-    const secret = await secretClient.getSecret('test-secret')
+    const secret = await secretClient.getSecret({secretName: 'test-secret'})
     res.send(secret)
   } catch (err) {
     console.log(err)

@@ -7,7 +7,6 @@ Built to run in low-memory environments
 * gcloud picking up wrong project
 
 ## Roadmap
-* Secret Manager
 * Linter
 * Database
 * Data Processing API

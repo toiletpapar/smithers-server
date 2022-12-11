@@ -1,6 +1,5 @@
 import express from 'express'
 import { secretClient } from './secrets/SecretClient'
-import fs from 'fs'
 
 const app = express()
 const port = 8080
@@ -15,7 +14,7 @@ app.get('/test', (req, res) => {
 app.get('/secret', async (req, res) => {
   try {
     const secret = await secretClient.getSecret('test-secret')
-    res.send('Hello World!')
+    res.send(secret)
   } catch (err) {
     console.log(err)
     res.sendStatus(500)

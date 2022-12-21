@@ -1,6 +1,7 @@
 import express from 'express'
 import { SecretClient } from './secrets/SecretClient'
-import { Database } from './database/db'
+import { Database } from './database/Database'
+import { ImageClient } from './vision/Vision'
 
 const app = express()
 const port = 8080
@@ -17,6 +18,41 @@ app.get('/database', async (req, res) => {
     const db = await Database.getInstance()
     db.query('SELECT * FROM weather').then((value) => {
       res.json(value)
+    })
+  } catch (err) {
+    res.sendStatus(500)
+  }
+})
+
+app.post('/vision', async (req, res) => {
+  try {
+    let buf: Buffer
+
+    // FIXME: Read the file into memory, unbounded
+    req.on('data', (chunk) => {
+      if (buf) {
+        buf = Buffer.concat([buf, chunk])
+      } else {
+        buf = chunk
+      }
+    })
+
+    req.on('end', async () => {
+      console.log('done reading')
+
+      try {
+        const imageClient = await ImageClient.getInstance()
+        const response = await imageClient.textDetection(buf.toString('base64'))
+        res.json(response)
+      } catch (err) {
+        console.log(err)
+        res.sendStatus(500)
+      }
+    })
+
+    req.on('error', (err) => {
+      console.log(err)
+      res.sendStatus(500)
     })
   } catch (err) {
     res.sendStatus(500)

@@ -10,7 +10,8 @@ Built to run in low-memory environments
 * Linter (Done)
 * Database (Done)
 * Data Processing API
-* Image Recognition API
+* Image Recognition API (Done)
+* Build a small demo client to understand image recognition
 * Matching algo with business directory API
 * Automated Testing
 * Build a small Android client or Web app

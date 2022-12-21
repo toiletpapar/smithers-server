@@ -3,12 +3,12 @@ Trying to use image recognition on reciepts for automatic budgeting
 
 Built to run in low-memory environments
 
-## Current Issue
-* gcloud picking up wrong project
-
 ## Roadmap
-* Linter
-* Database
+* Boilerplate (Done)
+* Live Reload (Done)
+* Secret Manager (Done)
+* Linter (Done)
+* Database (Done)
 * Data Processing API
 * Image Recognition API
 * Matching algo with business directory API

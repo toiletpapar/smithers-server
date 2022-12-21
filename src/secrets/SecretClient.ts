@@ -6,6 +6,15 @@ interface GetSecretOptions {
 
 class SecretClient {
   private client: SecretManagerServiceClient
+  private static secretClient: Promise<SecretClient>
+
+  public static getInstance(): Promise<SecretClient> {
+    if (!SecretClient.secretClient) {
+      SecretClient.secretClient = Promise.resolve(new SecretClient())
+    }
+
+    return SecretClient.secretClient
+  }
 
   public constructor () {
     this.client = new SecretManagerServiceClient({})
@@ -21,9 +30,6 @@ class SecretClient {
   }
 }
 
-const secretClient = new SecretClient()
-
 export {
-  SecretClient,
-  secretClient
+  SecretClient
 }

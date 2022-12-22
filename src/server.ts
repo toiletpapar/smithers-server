@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import { SecretClient } from './secrets/SecretClient'
 import { Database } from './database/Database'
 import { ImageClient } from './vision/Vision'
@@ -8,6 +9,12 @@ const port = 8080
 
 // fix any whitespace issues with set
 process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
+
+app.use(express.static('demo'))
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../demo/index.html'))
+})
 
 app.get('/test', (req, res) => {
   res.send('Hello World!')

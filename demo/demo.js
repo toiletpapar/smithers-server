@@ -1,41 +1,45 @@
 const initializeCanvas = () => {
-  const img = document.getElementById("demo-image");
-  const cnvs = document.getElementById("bounding-canvas");
+  const img = document.getElementById("demo-image")
 
-  // Set Canvas dimensions
-  cnvs.style.position = "absolute";
-  cnvs.style.left = img.offsetLeft + "px";
-  cnvs.style.top = img.offsetTop + "px";
-  cnvs.style.height = img.height + "px";
-  cnvs.style.width = img.width + "px";
+  img.style.display = "none"
+
+  const cnvs = document.getElementById("bounding-canvas")
+
+  const ctx = cnvs.getContext("2d")
+  ctx.canvas.height = img.height
+  ctx.canvas.width = img.width
+  ctx.drawImage(img, 0, 0)
 }
 
-const draw = () => {
+// Given an array of verticies, draw lines between the vertices in the provided context
+const drawPolygon = (ctx, vertices) => {
+  if (vertices.length > 1) {
+    ctx.beginPath()
+    ctx.moveTo(vertices[0].x, vertices[0].y)
+
+    vertices.slice(1, vertices.length).forEach((vertex) => {
+      ctx.lineTo(vertex.x, vertex.y)
+    })
+
+    ctx.lineTo(vertices[0].x, vertices[0].y)
+    ctx.stroke()
+  }
+}
+
+const draw = async () => {
+  const cnvs = document.getElementById("bounding-canvas")
+  const ctx = cnvs.getContext("2d")
+  ctx.lineWidth = 5
+  ctx.strokeStyle = "blue"
+
   // Grab the demo data
-  fetch('/data.json', {
+  const response = await fetch('/data.json', {
     method: 'GET'
-  }).then((res) => {
-    console.log(res.body)
   })
+  const data = await response.json()
 
-  const cnvs = document.getElementById("bounding-canvas");
-
-  var ctx = cnvs.getContext("2d");
-  ctx.strokeRect(50, 50, 50, 50);
-
-  // Filled triangle
-  // ctx.beginPath();
-  // ctx.moveTo(25, 25);
-  // ctx.lineTo(105, 25);
-  // ctx.lineTo(25, 105);
-  // ctx.fill();
-
-  // // Stroked triangle
-  // ctx.beginPath();
-  // ctx.moveTo(125, 125);
-  // ctx.lineTo(125, 45);
-  // ctx.lineTo(45, 125);
-  // ctx.closePath();
-  // ctx.stroke();
+  data.textAnnotations.forEach((annotation) => {
+    drawPolygon(ctx, annotation.boundingPoly.vertices)
+  })
 }
 

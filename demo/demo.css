@@ -1,0 +1,20 @@
+#annotation-container {
+  position: relative;
+}
+
+#tooltip {
+  position: absolute;
+  display: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  background: white;
+  font-size: 2rem;
+  z-index: 2;
+}
+
+polygon {
+  stroke: blue;
+  stroke-width: 5;
+  fill: transparent;
+}

@@ -2,10 +2,12 @@
   <head>
     <title>Demo</title>
     <script src="demo.js"></script>
+    <link rel="stylesheet" href="demo.css">
   </head>
   <body>
-    <img id="demo-image" src="demoImage.jpg" onload="initializeCanvas()" />
-    <canvas id="bounding-canvas"></canvas>
-    <button onclick="draw()">Hello World</button>
+    <div id="annotation-container">
+      <div id="tooltip"></div>
+      <img id="demo-image" src="demoImage.jpg" onload="drawAnnotations()" />
+    </div>
   </body>
 </html>

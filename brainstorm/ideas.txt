@@ -1,0 +1,32 @@
+Personal Finance
+
+* Use vision to recognize what's on a reciept
+* Build adapters for the stores I visit most often
+* Use the data to help manage personal finances
+  - chart spend by merchant
+  - chart spend by category
+* Add integrations for sources of income to automatically update data
+  - likely through crawling
+* Likely going to input data through my phone and look at the data on the desktop
+  - If I'm going to use my phone to input, might as well make an app instead of a web
+
+==
+Reading
+
+* Scrape webpages for knowing when a visual novel is updated
+
+===
+Recipes
+* Recommend what to eat for the day
+* Can integrate into the personal finance portion, where we manage grocery inventory, figure out price per meal over time
+
+Advanced
+* Build camera(s) that can work in a fridge, use vision to recognize what's in there and reconcile with what's in the receipts
+* Would require annotating/labelling appropriately
+
+* Can use 7-Log and 6.5-Log temperature guidelines and integrate with a temperature probe to ensure lower cooking temperature for poultry and other meats are still considered safe by the USDA
+
+===
+Health
+* Can integrate into Recipes to figure out diet goals
+* Can set exercise goals and maybe use GPS to track running activity

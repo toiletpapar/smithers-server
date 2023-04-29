@@ -68,3 +68,4 @@ function hideTooltip() {
   tooltip.style.display = 'none'
 }
 
+drawAnnotations()

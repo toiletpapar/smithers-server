@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": "GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-ec2ad6c08201.json nodemon --max_old_space_size=500 ./build/server.js",
+    "devWin": "set GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-ec2ad6c08201.json && nodemon --max_old_space_size=500 ./build/server.js",
     "start": "GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-ec2ad6c08201.json node --max_old_space_size=500 ./build/server.js"
   },
   "repository": {

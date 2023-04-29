@@ -1,7 +1,7 @@
-# BUDGETING-SERVER
+# SMITHERS AI (BUDGETING-SERVER)
 Trying to use image recognition on reciepts for automatic budgeting
 
-Built to run in low-memory environments
+Ultimately would like to be able to build an assistant for helping in everyday life.
 
 ## Roadmap
 * Boilerplate (Done)
@@ -9,9 +9,10 @@ Built to run in low-memory environments
 * Secret Manager (Done)
 * Linter (Done)
 * Database (Done)
+* Seeding
 * Data Processing API
 * Image Recognition API (Done)
-* Build a small demo client to understand image recognition
+* Build a small demo client to understand image recognition (Done)
 * Matching algo with business directory API
 * Automated Testing
 * Build a small Android client or Web app
@@ -29,3 +30,9 @@ Currently manually deployed on a single node
 * `npm run build`
 * (As required) Grab the gcloud service account keys from google cloud storage `budget-server-secrets` and put it in `{repo}/credentials` directory
 * `npm run start`
+
+## Next Steps
+* Create tables and seed for storing location of blob data on the cloud (nothing relational yet)
+* Start with uploading a picture and storing the Blob through an endpoint
+* Create a client that can upload the picture using the endpoint
+* Goal: end to end scaffold

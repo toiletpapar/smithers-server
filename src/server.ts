@@ -1,7 +1,5 @@
 import express from 'express'
 import path from 'path'
-import { SecretClient } from './secrets/SecretClient'
-import { Database } from './database/Database'
 import { ImageClient } from './vision/Vision'
 
 const app = express()
@@ -14,21 +12,6 @@ app.use(express.static('demo'))
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../demo/index.html'))
-})
-
-app.get('/test', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.get('/database', async (req, res) => {
-  try {
-    const db = await Database.getInstance()
-    db.query('SELECT * FROM weather').then((value) => {
-      res.json(value)
-    })
-  } catch (err) {
-    res.sendStatus(500)
-  }
 })
 
 app.post('/vision', async (req, res) => {
@@ -62,17 +45,6 @@ app.post('/vision', async (req, res) => {
       res.sendStatus(500)
     })
   } catch (err) {
-    res.sendStatus(500)
-  }
-})
-
-app.get('/secret', async (req, res) => {
-  try {
-    const secretClient = await SecretClient.getInstance()
-    const secret = await secretClient.getSecret({secretName: 'test-secret'})
-    res.send(secret)
-  } catch (err) {
-    console.log(err)
     res.sendStatus(500)
   }
 })

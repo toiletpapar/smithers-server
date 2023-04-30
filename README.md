@@ -23,13 +23,21 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * CI tools for automatic deployment
 
 ## Deployment
-Currently manually deployed on a single node
+Cluster of two nodes:
+* Pi
+* Laptop
+
+Currently manually deploy server on pi
 * SSH into the pi
 * (As required) Clone this repository with git
 * `npm i`
 * `npm run build`
 * (As required) Grab the gcloud service account keys from google cloud storage `budget-server-secrets` and put it in `{repo}/credentials` directory
 * `npm run start`
+
+Currently manually deploy database on laptop
+When deploying the psql database remember to:
+* Update the pg_hba.conf file for remote access
 
 ## Next Steps
 * Create tables and seed for storing location of blob data on the cloud (nothing relational yet)

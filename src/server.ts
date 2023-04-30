@@ -1,5 +1,6 @@
 import express from 'express'
 import path from 'path'
+import { crawlTargetRouter } from './routes/CrawlTarget'
 import { ImageClient } from './vision/Vision'
 
 const app = express()
@@ -8,11 +9,14 @@ const port = 8080
 // fix any whitespace issues with set
 process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
 
+app.use(express.json())
 app.use(express.static('demo'))
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../demo/index.html'))
 })
+
+app.use('/crawl-targets', crawlTargetRouter)
 
 app.post('/vision', async (req, res) => {
   try {

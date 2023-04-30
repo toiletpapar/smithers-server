@@ -1,5 +1,7 @@
 import { QueryResult } from 'pg'
 import { Database } from '../database/Database'
+import { object, string, boolean, date, number, mixed } from 'yup'
+import { isISO8601 } from '../utils/isISO8601'
 
 enum CrawlerTypes {
   webtoon = 'webtoon',
@@ -26,6 +28,14 @@ interface SQLCrawlTarget {
 
 class CrawlTarget {
   private data: ICrawlTarget;
+  private static validSchema = object({
+    crawlTargetId: number().optional(),
+    name: string().required(),
+    url: string().url().required(),
+    adapter: mixed<CrawlerTypes>().oneOf(Object.values(CrawlerTypes)).required(),
+    lastCrawledOn: string().defined().nullable().test('is-iso8601', 'Value must be in ISO8601 format', isISO8601),
+    crawlSuccess: boolean().defined().nullable(),
+  }).strict(true)
 
   public constructor(data: ICrawlTarget) {
     this.data = data
@@ -40,6 +50,16 @@ class CrawlTarget {
       lastCrawledOn: data.last_crawled_on,
       crawlSuccess: data.crawl_success
     })
+  }
+
+  public static async validate(data: any): Promise<ICrawlTarget> {
+    const validSchema = await this.validSchema.validate(data, {abortEarly: false})
+
+    return {
+      ...validSchema,
+      // Coerce into date
+      lastCrawledOn: validSchema.lastCrawledOn ? new Date(validSchema.lastCrawledOn) : null
+    }
   }
 
   public getObject(): ICrawlTarget {

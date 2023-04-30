@@ -51,7 +51,7 @@ const script = async () => {
   }
 }
 
-// GOOGLE_APPLICATION_CREDENTIALS=credentials/budget-server-370523-636a22f3aaf1.json npx ts-node seed/crawlTarget.ts
+// GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json npx ts-node seed/crawlTarget.ts
 script().then(() => {
   console.log('Successfully seeded crawlTargets')
 }).finally(async () => {

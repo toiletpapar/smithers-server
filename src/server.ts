@@ -1,6 +1,6 @@
 import express from 'express'
 import path from 'path'
-import { crawlTargetRouter } from './routes/CrawlTarget'
+import { apiRouter } from './routes'
 import { ImageClient } from './vision/Vision'
 
 const app = express()
@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../demo/index.html'))
 })
 
-app.use('/crawl-targets', crawlTargetRouter)
+app.use('/api/v1', apiRouter)
 
 app.post('/vision', async (req, res) => {
   try {

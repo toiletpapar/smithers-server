@@ -41,8 +41,10 @@ When deploying the psql database remember to:
 
 ## Next Steps
 * ~Create tables and seed for storing location of blob data on the cloud (nothing relational yet)~
-* Start with uploading a picture and storing the Blob through an endpoint
+* ~Start with uploading a picture and storing the Blob through an endpoint~
 * Create a client that can upload the picture using the endpoint
+  - a form to input items for the two endpoints
+  - read data and display
 * Goal: end to end scaffold
 
 ## TODO

@@ -1,5 +1,8 @@
 import { QueryResult } from 'pg'
 import { Database } from '../database/Database'
+import { object, string, boolean, number } from 'yup'
+import { isISO8601 } from '../utils/isISO8601'
+import { Model, ModelStatic } from './model'
 
 interface ILatestMangaUpdate {
   latestMangaUpdateId?: number; // identifier, primary
@@ -21,8 +24,17 @@ interface SQLLatestMangaUpdate {
   read_at: string;
 }
 
-class LatestMangaUpdate {
+const LatestMangaUpdate: ModelStatic<ILatestMangaUpdate, SQLLatestMangaUpdate> = class implements Model<ILatestMangaUpdate, SQLLatestMangaUpdate> {
   private data: ILatestMangaUpdate;
+  private static validSchema = object({
+    latestMangaUpdateId: number().optional(),
+    crawlId: number().required(),
+    crawledOn: string().required().test('is-iso8601', 'Value must be in ISO8601 format', isISO8601),
+    chapter: number().min(0).integer().required(),
+    chapterName: string().defined().nullable(),
+    isRead: boolean().required(),
+    readAt: string().url().required(),
+  }).strict(true)
 
   public constructor(data: ILatestMangaUpdate) {
     this.data = data
@@ -38,6 +50,16 @@ class LatestMangaUpdate {
       isRead: data.is_read,
       readAt: data.read_at,
     })
+  }
+
+  public static async validate(data: any): Promise<ILatestMangaUpdate> {
+    const validSchema = await this.validSchema.validate(data, {abortEarly: false})
+
+    return {
+      ...validSchema,
+      // Coerce into date
+      crawledOn: new Date(validSchema.crawledOn)
+    }
   }
 
   public getObject(): ILatestMangaUpdate {

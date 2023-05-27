@@ -53,6 +53,14 @@ const CrawlTarget: ModelStatic<ICrawlTarget, SQLCrawlTarget> = class implements 
     })
   }
 
+  public static async list(): Promise<QueryResult<SQLCrawlTarget>> {
+    const db = await Database.getInstance()
+
+    return await db.query({
+      text: 'SELECT * FROM crawl_target;',
+    })
+  }
+
   public static async validate(data: any): Promise<ICrawlTarget> {
     const validSchema = await this.validSchema.validate(data, {abortEarly: false})
 

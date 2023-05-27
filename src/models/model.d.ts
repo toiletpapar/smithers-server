@@ -2,7 +2,8 @@ import { QueryResult } from 'pg'
 
 // Describe entities that sit on top of the database
 interface ModelStatic<Data, SQL> {
-  fromSQL: (data: SQL) => Model;
+  fromSQL: (data: SQL) => Model<Data, SQL>;
+  list: () => Promise<QueryResult<SQL>>;
   validate: (data: any) => Promise<Data>;
   new (data: Data): Model<Data, SQL>;
 }

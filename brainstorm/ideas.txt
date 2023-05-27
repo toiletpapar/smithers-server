@@ -30,3 +30,7 @@ Advanced
 Health
 * Can integrate into Recipes to figure out diet goals
 * Can set exercise goals and maybe use GPS to track running activity
+
+===
+Food
+* Restaurants lists (like omnom)

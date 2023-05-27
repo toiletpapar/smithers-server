@@ -52,6 +52,14 @@ const LatestMangaUpdate: ModelStatic<ILatestMangaUpdate, SQLLatestMangaUpdate> =
     })
   }
 
+  public static async list(): Promise<QueryResult<SQLLatestMangaUpdate>> {
+    const db = await Database.getInstance()
+
+    return await db.query({
+      text: 'SELECT * FROM latest_manga_update;',
+    })
+  }
+
   public static async validate(data: any): Promise<ILatestMangaUpdate> {
     const validSchema = await this.validSchema.validate(data, {abortEarly: false})
 

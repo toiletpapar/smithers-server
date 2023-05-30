@@ -16,7 +16,7 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
       return res.status(400).json({ errors });
     } else if (err.code === '23505' && err.constraint === 'crawl_target_name_key') {
       // Invalid key error from SQL
-      return res.status(409).json({ type: 'duplicate_key', path: 'name', message: err.message })
+      return res.status(409).json({ errors: [{type: 'duplicate_key', path: 'name', message: err.message}] })
     }
 
     next(err)

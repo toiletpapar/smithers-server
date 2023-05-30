@@ -1,5 +1,4 @@
 import { Database } from '../src/database/Database'
-import { CrawlTarget } from '../src/models/CrawlTarget'
 import { script as crawlTargetScript } from './crawlTarget'
 import { script as latestMangaUpdateScript } from './latestMangaUpdate'
 
@@ -7,6 +6,9 @@ let db: Database
 
 const script = async () => {
   console.log('Started general seeding...')
+
+  // fix any whitespace issues with set
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
 
   db = await Database.getInstance()
 

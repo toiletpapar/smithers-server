@@ -1,3 +1,4 @@
+import { ValidationError } from 'yup'
 import { LatestMangaUpdate } from '../../models/LatestMangaUpdate'
 import { Request, Response, NextFunction } from 'express'
 
@@ -11,7 +12,7 @@ const createLatestMangaUpdate = async (req: Request, res: Response, next: NextFu
   } catch (err: any) {
     if (err.name === 'ValidationError') {
       // Yup errors from validate
-      const errors = err.errors.map((e: string) => ({ message: e }));
+      const errors = (err as ValidationError).inner.map((e) => ({ type: e.type, path: e.path, message: e.message }));
       return res.status(400).json({ errors });
     }
 

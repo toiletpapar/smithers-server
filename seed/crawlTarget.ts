@@ -5,6 +5,7 @@ import { CrawlTarget, CrawlerTypes, SQLCrawlTarget } from '../src/models/CrawlTa
 let db: Database
 
 const NUM_CRAWL_TARGETS = 20
+const DAY_IN_MILLIS = 1000*60*60*24
 
 const script = async (): Promise<SQLCrawlTarget[]> => {
   console.log('Starting crawlTarget seeding...')
@@ -44,12 +45,14 @@ const script = async (): Promise<SQLCrawlTarget[]> => {
 
   console.log('Inserting data...')
   const results = await Promise.all(Array.from({length: NUM_CRAWL_TARGETS}).map(() => {
+    const isCrawled = faker.datatype.boolean()
+
     return new CrawlTarget({
       name: faker.lorem.words(3),
       url: faker.internet.url(),
       adapter: (['webtoon', 'mangadex'] as CrawlerTypes[])[faker.datatype.number(1)],
-      lastCrawledOn: faker.datatype.boolean() ? faker.datatype.datetime() : null,
-      crawlSuccess: faker.datatype.boolean() ? faker.datatype.boolean() : null
+      lastCrawledOn: isCrawled ? faker.datatype.datetime({min: Date.now() - DAY_IN_MILLIS*5, max: Date.now() + DAY_IN_MILLIS*5}) : null,
+      crawlSuccess: isCrawled ? faker.datatype.boolean() : null
     }).insert()
   }))
 

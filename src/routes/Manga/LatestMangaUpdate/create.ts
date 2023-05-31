@@ -1,5 +1,5 @@
 import { ValidationError } from 'yup'
-import { LatestMangaUpdate } from '../../models/LatestMangaUpdate'
+import { LatestMangaUpdate } from '../../../models/LatestMangaUpdate'
 import { Request, Response, NextFunction } from 'express'
 
 const createLatestMangaUpdate = async (req: Request, res: Response, next: NextFunction) => {

@@ -49,5 +49,5 @@ When deploying the psql database remember to:
 
 ## TODO
 * Follow recommendations from https://www.postgresql.org/docs/current/populate.html for seeding
-* Add list/get for CrawlTarget
-* Add get for LatestMangaUpdate
+* Use Stored Procedures
+* Update endpoints: use url params for manga endpoint, make manga update a child of manga

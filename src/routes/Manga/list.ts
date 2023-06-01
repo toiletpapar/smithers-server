@@ -1,6 +1,7 @@
 import { ValidationError, object, string } from 'yup'
 import { Manga, MangaListOptions } from '../../models/Manga'
 import { Request, Response, NextFunction } from 'express'
+import { decodeBoolean } from '../../utils/decodeQuery'
 
 const querySchema = object({
   onlyLatest: string().oneOf(['true', 'false']).optional(),
@@ -11,9 +12,10 @@ const listMangas = async (req: Request, res: Response, next: NextFunction) => {
     const params = await querySchema.validate(req.query, {abortEarly: false})
     
     // massage
-    const listOptions: MangaListOptions = {
-      ...params,
-      onlyLatest: params.onlyLatest != undefined ? params.onlyLatest === 'true' : undefined
+    const listOptions: MangaListOptions = {}
+
+    if (decodeBoolean(params.onlyLatest) !== undefined) {
+      listOptions.onlyLatest = decodeBoolean(params.onlyLatest)
     }
 
     const sqlResult = await Manga.list(listOptions)

@@ -1,18 +1,20 @@
 import { QueryResult } from "pg";
-import { ICrawlTarget, SQLCrawlTarget } from "./CrawlTarget";
+import { CrawlTarget, ICrawlTarget, SQLCrawlTarget } from "./CrawlTarget";
 import { ILatestMangaUpdate, LatestMangaUpdate, SQLLatestMangaUpdate } from "./LatestMangaUpdate";
 import { Database } from "../database/Database";
 
-interface IManga extends ICrawlTarget {
+interface IManga {
+  crawler: ICrawlTarget;
   mangaUpdates: ILatestMangaUpdate[];
 }
 
-interface SQLManga extends SQLCrawlTarget {
-  manga_updates: SQLLatestMangaUpdate[]
+interface SQLManga {
+  crawler: SQLCrawlTarget;
+  manga_updates: SQLLatestMangaUpdate[];
 }
 
 interface MangaListOptions {
-  onlyLatest: Boolean | undefined
+  onlyLatest?: Boolean
 }
 
 class Manga {
@@ -24,12 +26,7 @@ class Manga {
 
   public static fromSQL(data: SQLManga) {
     return new this({
-      crawlTargetId: data.crawl_target_id,
-      name: data.name,
-      url: data.url,
-      adapter: data.adapter,
-      lastCrawledOn: data.last_crawled_on,
-      crawlSuccess: data.crawl_success,
+      crawler: CrawlTarget.fromSQL(data.crawler).getObject(),
       mangaUpdates: data.manga_updates.map((update) => LatestMangaUpdate.fromSQL(update).getObject())
     })
   }
@@ -46,28 +43,23 @@ class Manga {
       ...options
     }
 
-    console.log(opts.onlyLatest)
-
     // TODO: Stored Procedures
     if (opts.onlyLatest) {
       return await db.query({
         text: `
           SELECT
-            x.crawl_target_id,
-            x.name,
-            x.url,
-            x.adapter,
-            x.last_crawled_on,
-            x.crawl_success,
+            x.crawler,
             x.manga_updates
           FROM (
-            SELECT 
-              crawl_target_id,
-              name,
-              url,
-              adapter,
-              last_crawled_on,
-              crawl_success,
+            SELECT
+              json_build_object(
+                'crawl_target_id', crawl_target_id,
+                'name', name,
+                'url', url,
+                'adapter', adapter,
+                'last_crawled_on', last_crawled_on,
+                'crawl_success', crawl_success
+              ) crawler,
               CASE
                 WHEN latest_manga_update_id IS NULL THEN ARRAY[]::json[]
                 ELSE ARRAY[json_build_object(
@@ -83,21 +75,23 @@ class Manga {
             FROM crawl_target
             LEFT JOIN latest_manga_update
             USING (crawl_target_id)
+            ORDER BY crawl_target_id
           ) x
-          WHERE _rn = 1
-          ORDER BY crawl_target_id
+          WHERE _rn = 1;
         `
       })
     } else {
       return await db.query({
         text: `
           SELECT 
-            crawl_target.crawl_target_id,
-            name,
-            url,
-            adapter,
-            last_crawled_on,
-            crawl_success,
+            json_build_object(
+              'crawl_target_id', crawl_target_id,
+              'name', name,
+              'url', url,
+              'adapter', adapter,
+              'last_crawled_on', last_crawled_on,
+              'crawl_success', crawl_success
+            ) crawler,
             COALESCE(
               json_agg(
                 json_build_object(

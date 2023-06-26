@@ -1,4 +1,4 @@
-# SMITHERS AI (BUDGETING-SERVER)
+# SMITHERS AI
 Trying to use image recognition on reciepts for automatic budgeting
 
 Ultimately would like to be able to build an assistant for helping in everyday life.
@@ -9,11 +9,15 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Secret Manager (Done)
 * Linter (Done)
 * Database (Done)
-* Seeding
+* Seeding (Done)
+== Manga ==
+* Add crawling functionality for automatic updates to clients
 * Data Processing API
+== Budgeting ==
 * Image Recognition API (Done)
 * Build a small demo client to understand image recognition (Done)
 * Matching algo with business directory API
+== Other ==
 * Automated Testing
 * Build a small Android client or Web app
 * Expose server to the Internet

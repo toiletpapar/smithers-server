@@ -1,10 +1,10 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
 import { CrawlTarget, CrawlerTypes, SQLCrawlTarget } from '../src/models/CrawlTarget'
+import seedConf from '../data/seed.json'
 
 let db: Database
 
-const NUM_CRAWL_TARGETS = 20
 const DAY_IN_MILLIS = 1000*60*60*24
 
 const script = async (): Promise<SQLCrawlTarget[]> => {
@@ -44,7 +44,7 @@ const script = async (): Promise<SQLCrawlTarget[]> => {
   `)
 
   console.log('Inserting data...')
-  const results = await Promise.all(Array.from({length: NUM_CRAWL_TARGETS}).map(() => {
+  const results = await Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {
     const isCrawled = faker.datatype.boolean()
 
     return new CrawlTarget({

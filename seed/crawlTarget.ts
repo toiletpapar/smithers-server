@@ -37,7 +37,7 @@ const script = async (): Promise<SQLCrawlTarget[]> => {
       name VARCHAR(100) UNIQUE NOT NULL,
       url TEXT NOT NULL,
       adapter crawler_types NOT NULL,
-      last_crawled_on TIMESTAMP,
+      last_crawled_on TIMESTAMPTZ,
       crawl_success BOOLEAN,
       PRIMARY KEY(crawl_target_id)
     );

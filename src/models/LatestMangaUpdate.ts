@@ -74,6 +74,13 @@ const LatestMangaUpdate: ModelStatic<ILatestMangaUpdate, SQLLatestMangaUpdate> =
     return this.data
   }
 
+  public static serialize(data: ILatestMangaUpdate) {
+    return {
+      ...data,
+      crawledOn: data.crawledOn.toISOString()
+    }
+  }
+
   public async insert(): Promise<QueryResult<SQLLatestMangaUpdate>> {
     if (this.data.latestMangaUpdateId) {
       console.log('This crawl target seems to have an id, did you mean to update instead?')

@@ -6,7 +6,7 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
   try {
     const data = await CrawlTarget.validate(req.body)
     const sqlResult = await new CrawlTarget(data).insert()
-    const crawlTarget = CrawlTarget.fromSQL(sqlResult.rows[0]).getObject()
+    const crawlTarget = CrawlTarget.serialize(CrawlTarget.fromSQL(sqlResult.rows[0]).getObject())
 
     res.status(201).json(crawlTarget)
   } catch (err: any) {

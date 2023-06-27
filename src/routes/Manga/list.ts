@@ -19,7 +19,7 @@ const listMangas = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const sqlResult = await Manga.list(listOptions)
-    const mangas = sqlResult.rows.map((manga) => Manga.fromSQL(manga).getObject())
+    const mangas = sqlResult.rows.map((manga) => Manga.serialize(Manga.fromSQL(manga).getObject()))
 
     res.status(200).json(mangas)
   } catch (err: any) {

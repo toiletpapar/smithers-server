@@ -6,7 +6,7 @@ const createLatestMangaUpdate = async (req: Request, res: Response, next: NextFu
   try {
     const data = await LatestMangaUpdate.validate(req.body)
     const sqlResult = await new LatestMangaUpdate(data).insert()
-    const latestMangaUpdate = LatestMangaUpdate.fromSQL(sqlResult.rows[0]).getObject()
+    const latestMangaUpdate = LatestMangaUpdate.serialize(LatestMangaUpdate.fromSQL(sqlResult.rows[0]).getObject())
 
     res.status(201).json(latestMangaUpdate)
   } catch (err: any) {

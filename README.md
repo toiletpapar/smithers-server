@@ -43,14 +43,6 @@ Currently manually deploy database on laptop
 When deploying the psql database remember to:
 * Update the pg_hba.conf file for remote access
 
-## Next Steps
-* ~Create tables and seed for storing location of blob data on the cloud (nothing relational yet)~
-* ~Start with uploading a picture and storing the Blob through an endpoint~
-* Create a client that can upload the picture using the endpoint
-  - a form to input items for the two endpoints
-  - read data and display
-* Goal: end to end scaffold
-
 ## TODO
 * Follow recommendations from https://www.postgresql.org/docs/current/populate.html for seeding
 * Use Stored Procedures

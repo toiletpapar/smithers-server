@@ -26,7 +26,7 @@ const script = async (crawlTargets: SQLCrawlTarget[]): Promise<SQLLatestMangaUpd
     CREATE TABLE latest_manga_update (
       latest_manga_update_id INT GENERATED ALWAYS AS IDENTITY,
       crawl_target_id INT NOT NULL,
-      crawled_on TIMESTAMP NOT NULL,
+      crawled_on TIMESTAMPTZ NOT NULL,
       chapter SMALLINT NOT NULL,
       chapter_name TEXT,
       is_read BOOLEAN NOT NULL,

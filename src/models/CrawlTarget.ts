@@ -75,6 +75,13 @@ const CrawlTarget: ModelStatic<ICrawlTarget, SQLCrawlTarget> = class implements 
     return this.data
   }
 
+  public static serialize(data: ICrawlTarget) {
+    return {
+      ...data,
+      lastCrawledOn: data.lastCrawledOn ? data.lastCrawledOn.toISOString() : data.lastCrawledOn
+    }
+  }
+
   public async insert(): Promise<QueryResult<SQLCrawlTarget>> {
     if (this.data.crawlTargetId) {
       console.log('This crawl target seems to have an id, did you mean to update instead?')

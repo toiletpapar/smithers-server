@@ -43,9 +43,11 @@ class Manga {
       ...options
     }
 
+    let results: QueryResult<SQLManga>
+
     // TODO: Stored Procedures
     if (opts.onlyLatest) {
-      return await db.query({
+      results = await db.query({
         text: `
           SELECT
             x.crawler,
@@ -81,7 +83,7 @@ class Manga {
         `
       })
     } else {
-      return await db.query({
+      results = await db.query({
         text: `
           SELECT 
             json_build_object(
@@ -113,10 +115,38 @@ class Manga {
         `,
       })
     }
+
+    // Transform data types that aren't supported in JSON to their proper data types
+    return {
+      ...results,
+      rows: results.rows.map((row) => {
+        return {
+          ...row,
+          crawler: {
+            ...row.crawler,
+            last_crawled_on: row.crawler.last_crawled_on ? new Date(row.crawler.last_crawled_on) : row.crawler.last_crawled_on
+          },
+          manga_updates: row.manga_updates.map((update) => {
+            return {
+              ...update,
+              crawled_on: new Date(update.crawled_on)
+            }
+          })
+        }
+      })
+    }
   }
 
   public getObject(): IManga {
     return this.data
+  }
+
+  public static serialize(data: IManga) {
+    return {
+      ...data,
+      crawler: CrawlTarget.serialize(data.crawler),
+      mangaUpdates: data.mangaUpdates.map((update) => LatestMangaUpdate.serialize(update))
+    }
   }
 }
 

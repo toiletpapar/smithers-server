@@ -67,6 +67,11 @@ class Database {
     return new DatabaseClient(await this.pool.connect())
   }
 
+  // Used with other pgClient tools, prefer class methods instead
+  public getPoolInstance(): Pool {
+    return this.pool
+  }
+
   public end(): Promise<void> {
     return this.pool.end()
   }

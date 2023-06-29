@@ -1,13 +1,14 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { CrawlTarget, CrawlerTypes, SQLCrawlTarget } from '../src/models/CrawlTarget'
+import { CrawlTarget, CrawlerTypes } from '../src/models/CrawlTarget'
+import { CrawlTargetRepository } from '../src/repositories/CrawlTargetRepository'
 import seedConf from '../data/seed.json'
 
 let db: Database
 
 const DAY_IN_MILLIS = 1000*60*60*24
 
-const script = async (): Promise<SQLCrawlTarget[]> => {
+const script = async (): Promise<CrawlTarget[]> => {
   console.log('Starting crawlTarget seeding...')
 
   db = await Database.getInstance()
@@ -44,19 +45,17 @@ const script = async (): Promise<SQLCrawlTarget[]> => {
   `)
 
   console.log('Inserting data...')
-  const results = await Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {
+  return Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {
     const isCrawled = faker.datatype.boolean()
 
-    return new CrawlTarget({
+    return CrawlTargetRepository.insert({
       name: faker.lorem.words(3),
       url: faker.internet.url(),
       adapter: (['webtoon', 'mangadex'] as CrawlerTypes[])[faker.datatype.number(1)],
       lastCrawledOn: isCrawled ? faker.datatype.datetime({min: Date.now() - DAY_IN_MILLIS*5, max: Date.now() + DAY_IN_MILLIS*5}) : null,
       crawlSuccess: isCrawled ? faker.datatype.boolean() : null
-    }).insert()
+    })
   }))
-
-  return results.map((result) => result.rows[0])
 }
 
 export { script }

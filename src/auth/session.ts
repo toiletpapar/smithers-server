@@ -29,12 +29,10 @@ const getSessionMiddleware = async () => {
 }
 
 const serializeUser = async (user: any, done: (err: any, id?: SessionInfo) => void) => {
-  console.log('serialize')
   done(null, {user_id: user.userId})
 }
 
 const deserializeUser = async (sessionInfo: SessionInfo, done: (err: any, id?: UserInfo | boolean) => void) => {
-  console.log('deserialize')
   try {
     // TODO: Actually create users collection
     // Get user based on session info

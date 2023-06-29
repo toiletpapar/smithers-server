@@ -34,3 +34,7 @@ Health
 ===
 Food
 * Restaurants lists (like omnom)
+
+===
+Friends
+* Friendly reminders for things to do with people starred in your contacts list, scheduled

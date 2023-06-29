@@ -1,7 +1,8 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { SQLLatestMangaUpdate, LatestMangaUpdate } from '../src/models/LatestMangaUpdate'
-import { SQLCrawlTarget } from '../src/models/CrawlTarget'
+import { MangaUpdate } from '../src/models/MangaUpdate'
+import { CrawlTarget } from '../src/models/CrawlTarget'
+import { MangaUpdateRepository } from '../src/repositories/MangaUpdateRepository'
 import seedConf from '../data/seed.json'
 
 let db: Database
@@ -22,31 +23,31 @@ const removeRandomElements = (arr: any[], times: number): any[] => {
   }
 }
 
-const script = async (crawlTargets: SQLCrawlTarget[]): Promise<SQLLatestMangaUpdate[]> => {
-  console.log('Starting latestMangaUpdate seeding...')
+const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
+  console.log('Starting mangaUpdate seeding...')
 
   if (crawlTargets.length === 0) {
-    throw new Error('At least one crawl target must exist for latestMangUpdate to populate')
+    throw new Error('At least one crawl target must exist for mangaUpdate to populate')
   }
 
   db = await Database.getInstance()
 
   console.log('Dropping table...')
   await db.query(`
-    DROP TABLE IF EXISTS latest_manga_update;
+    DROP TABLE IF EXISTS manga_update;
   `)
 
   console.log('Creating table...')
   await db.query(`
-    CREATE TABLE latest_manga_update (
-      latest_manga_update_id INT GENERATED ALWAYS AS IDENTITY,
+    CREATE TABLE manga_update (
+      manga_update_id INT GENERATED ALWAYS AS IDENTITY,
       crawl_target_id INT NOT NULL,
       crawled_on TIMESTAMPTZ NOT NULL,
       chapter SMALLINT NOT NULL,
       chapter_name TEXT,
       is_read BOOLEAN NOT NULL,
       read_at TEXT NOT NULL,
-      PRIMARY KEY(latest_manga_update_id),
+      PRIMARY KEY(manga_update_id),
       CONSTRAINT fk_crawl_target
         FOREIGN KEY(crawl_target_id)
           REFERENCES crawl_target(crawl_target_id)
@@ -55,25 +56,23 @@ const script = async (crawlTargets: SQLCrawlTarget[]): Promise<SQLLatestMangaUpd
   `)
 
   console.log('Inserting data...')
-  const randomCrawlTargets = removeRandomElements(crawlTargets, Math.round(seedConf.NUM_CRAWL_TARGETS * seedConf.CRAWL_TARGETS_WITHOUT_UPDATES))
-  const results = await Promise.all(Array.from({length: seedConf.NUM_LATEST_MANGA_UPDATES}).map(() => {
-    const crawlTarget = randomCrawlTargets[faker.datatype.number(randomCrawlTargets.length - 1)]
+  const randomCrawlTargets: CrawlTarget[] = removeRandomElements(crawlTargets, Math.round(seedConf.NUM_CRAWL_TARGETS * seedConf.CRAWL_TARGETS_WITHOUT_UPDATES))
+  return await Promise.all(Array.from({length: seedConf.NUM_MANGA_UPDATES}).map(() => {
+    const crawlTarget = randomCrawlTargets[faker.datatype.number(randomCrawlTargets.length - 1)].getObject()
 
-    if (!crawlTarget.crawl_target_id) {
+    if (!crawlTarget.crawlTargetId) {
       throw new Error('crawlTarget does not have a primary key')
     }
 
-    return new LatestMangaUpdate({
-      crawlId: crawlTarget.crawl_target_id,
+    return MangaUpdateRepository.insert({
+      crawlId: crawlTarget.crawlTargetId,
       crawledOn: faker.datatype.datetime(),
       chapter: faker.datatype.number(32766),
       chapterName: faker.datatype.boolean() ? faker.lorem.words(5) : null,
       isRead: faker.datatype.boolean(),
       readAt: faker.internet.url()
-    }).insert()
+    })
   }))
-
-  return results.map((result) => result.rows[0])
 }
 
 export { script }

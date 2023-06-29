@@ -1,14 +1,23 @@
 import { ValidationError } from 'yup'
-import { CrawlTarget } from '../../models/CrawlTarget'
 import { Request, Response, NextFunction } from 'express'
+import { CrawlTargetRepository } from '../../repositories/CrawlTargetRepository'
+import { CrawlTarget, ICrawlTarget } from '../../models/CrawlTarget'
+import { removeItems } from '../../utils/arrayUtils'
 
 const createCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await CrawlTarget.validate(req.body)
-    const sqlResult = await new CrawlTarget(data).insert()
-    const crawlTarget = CrawlTarget.serialize(CrawlTarget.fromSQL(sqlResult.rows[0]).getObject())
+    const data = await CrawlTarget.validateRequest(
+      req.body,
+      removeItems(CrawlTarget.allProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess'])
+    ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess'>
+    const crawlTarget = await CrawlTargetRepository.insert({
+      ...data,
+      lastCrawledOn: null,
+      crawlSuccess: null
+    })
+    const serializedCrawlTarget = crawlTarget.serialize()
 
-    res.status(201).json(crawlTarget)
+    res.status(201).json(serializedCrawlTarget)
   } catch (err: any) {
     if (err.name === 'ValidationError') {
       // Yup errors from validate

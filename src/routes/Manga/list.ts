@@ -1,5 +1,5 @@
 import { ValidationError, object, string } from 'yup'
-import { Manga, MangaListOptions } from '../../models/Manga'
+import { MangaListOptions, MangaRepository } from '../../repositories/MangaRepository'
 import { Request, Response, NextFunction } from 'express'
 import { decodeBoolean } from '../../utils/decodeQuery'
 
@@ -18,10 +18,10 @@ const listMangas = async (req: Request, res: Response, next: NextFunction) => {
       listOptions.onlyLatest = decodeBoolean(params.onlyLatest)
     }
 
-    const sqlResult = await Manga.list(listOptions)
-    const mangas = sqlResult.rows.map((manga) => Manga.serialize(Manga.fromSQL(manga).getObject()))
+    const mangas = await MangaRepository.list(listOptions)
+    const serializedMangas = mangas.map((manga) => manga.serialize())
 
-    res.status(200).json(mangas)
+    res.status(200).json(serializedMangas)
   } catch (err: any) {
     if (err.name === 'ValidationError') {
       // Yup errors from validate

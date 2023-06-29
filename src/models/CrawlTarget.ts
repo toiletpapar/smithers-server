@@ -1,8 +1,6 @@
-import { QueryResult } from 'pg'
-import { Database } from '../database/Database'
-import { object, string, boolean, number, mixed } from 'yup'
+import { object, string, boolean, number, mixed, array } from 'yup'
 import { isISO8601 } from '../utils/isISO8601'
-import { Model, ModelStatic } from './model'
+import { SQLCrawlTarget } from '../repositories/CrawlTargetRepository'
 
 enum CrawlerTypes {
   webtoon = 'webtoon',
@@ -10,7 +8,7 @@ enum CrawlerTypes {
 }
 
 interface ICrawlTarget {
-  crawlTargetId?: number;  // identifier, primary
+  crawlTargetId: number;  // identifier, primary
   name: string;  // human readable identifier
   url: string;  // The place to search
   adapter: CrawlerTypes; // The strategy to use to find the information when crawling
@@ -18,19 +16,12 @@ interface ICrawlTarget {
   crawlSuccess: boolean | null; // Whether the latest crawl logged data
 }
 
-interface SQLCrawlTarget {
-  crawl_target_id: number;
-  name: string;
-  url: string;
-  adapter: CrawlerTypes;
-  last_crawled_on: Date | null;
-  crawl_success: boolean | null;
-}
-
-const CrawlTarget: ModelStatic<ICrawlTarget, SQLCrawlTarget> = class implements Model<ICrawlTarget, SQLCrawlTarget> {
+class CrawlTarget {
   private data: ICrawlTarget;
-  private static validSchema = object({
-    crawlTargetId: number().optional(),
+  static allProperties: (keyof ICrawlTarget)[] = ['crawlTargetId', 'name', 'url', 'adapter', 'lastCrawledOn', 'crawlSuccess']
+  private static propertiesSchema = array().of(string().oneOf(this.allProperties).defined()).defined().strict(true)
+  private static dataSchema = object({
+    crawlTargetId: number().required(),
     name: string().required(),
     url: string().url().required(),
     adapter: mixed<CrawlerTypes>().oneOf(Object.values(CrawlerTypes)).required(),
@@ -53,21 +44,36 @@ const CrawlTarget: ModelStatic<ICrawlTarget, SQLCrawlTarget> = class implements 
     })
   }
 
-  public static async list(): Promise<QueryResult<SQLCrawlTarget>> {
-    const db = await Database.getInstance()
+  public static async fromRequest(data: any) {
+    const result = (await this.validateRequest(data, this.allProperties)) as ICrawlTarget
 
-    return await db.query({
-      text: 'SELECT * FROM crawl_target;',
+    return new this({
+      crawlTargetId: result.crawlTargetId,
+      name: result.name,
+      url: result.url,
+      adapter: result.adapter,
+      lastCrawledOn: result.lastCrawledOn,
+      crawlSuccess: result.crawlSuccess
     })
   }
 
-  public static async validate(data: any): Promise<ICrawlTarget> {
-    const validSchema = await this.validSchema.validate(data, {abortEarly: false})
+  public static async validateRequest(data: any, properties: string[]): Promise<Partial<ICrawlTarget>> {
+    // Validate properties provided by the request
+    const validatedProperties = await this.propertiesSchema.validate(properties)
+
+    // Validate the data against the specified properties, erroring on any unidentified properties
+    const validationSchema = this.dataSchema.pick(validatedProperties).noUnknown().strict(true)
+    const validatedData = await validationSchema.validate(data, {abortEarly: false})
+    const coercedData: Partial<ICrawlTarget> = {}
+
+    // coerce data types
+    if (validatedData.lastCrawledOn) {
+      coercedData.lastCrawledOn = new Date(validatedData.lastCrawledOn)
+    }
 
     return {
-      ...validSchema,
-      // Coerce into date
-      lastCrawledOn: validSchema.lastCrawledOn ? new Date(validSchema.lastCrawledOn) : null
+      ...validatedData as any,
+      ...coercedData
     }
   }
 
@@ -75,38 +81,16 @@ const CrawlTarget: ModelStatic<ICrawlTarget, SQLCrawlTarget> = class implements 
     return this.data
   }
 
-  public static serialize(data: ICrawlTarget) {
+  public serialize() {
     return {
-      ...data,
-      lastCrawledOn: data.lastCrawledOn ? data.lastCrawledOn.toISOString() : data.lastCrawledOn
+      ...this.data,
+      lastCrawledOn: this.data.lastCrawledOn ? this.data.lastCrawledOn.toISOString() : this.data.lastCrawledOn
     }
-  }
-
-  public async insert(): Promise<QueryResult<SQLCrawlTarget>> {
-    if (this.data.crawlTargetId) {
-      console.log('This crawl target seems to have an id, did you mean to update instead?')
-
-      throw new Error('Tried to insert data with an id into a serial column')
-    }
-
-    const db = await Database.getInstance()
-
-    return await db.query({
-      text: 'INSERT INTO crawl_target (name, url, adapter, last_crawled_on, crawl_success) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
-      values: [
-        this.data.name,
-        this.data.url,
-        this.data.adapter,
-        this.data.lastCrawledOn,
-        this.data.crawlSuccess
-      ]
-    })
   }
 } 
 
 export {
   CrawlTarget,
   CrawlerTypes,
-  ICrawlTarget,
-  SQLCrawlTarget
+  ICrawlTarget
 }

@@ -20,7 +20,7 @@ class MangaUpdate {
     mangaUpdateId: number().required(),
     crawlId: number().required(),
     crawledOn: string().required().test('is-iso8601', 'Value must be in ISO8601 format', isISO8601),
-    chapter: number().min(0).integer().required(),
+    chapter: number().min(0).max(32767).integer().required(),
     chapterName: string().defined().nullable(),
     isRead: boolean().required(),
     readAt: string().url().required()
@@ -78,7 +78,9 @@ class MangaUpdate {
   }
 
   public getObject(): IMangaUpdate {
-    return this.data
+    return {
+      ...this.data
+    }
   }
 
   public serialize() {

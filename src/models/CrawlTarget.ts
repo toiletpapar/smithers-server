@@ -22,7 +22,7 @@ class CrawlTarget {
   private static propertiesSchema = array().of(string().oneOf(this.allProperties).defined()).defined().strict(true)
   private static dataSchema = object({
     crawlTargetId: number().required(),
-    name: string().required(),
+    name: string().max(100).required(),
     url: string().url().required(),
     adapter: mixed<CrawlerTypes>().oneOf(Object.values(CrawlerTypes)).required(),
     lastCrawledOn: string().defined().nullable().test('is-iso8601', 'Value must be in ISO8601 format or null', (input) => input === null || isISO8601(input)),
@@ -78,7 +78,9 @@ class CrawlTarget {
   }
 
   public getObject(): ICrawlTarget {
-    return this.data
+    return {
+      ...this.data
+    }
   }
 
   public serialize() {

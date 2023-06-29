@@ -1,6 +1,7 @@
 import { Database } from '../src/database/Database'
 import { script as crawlTargetScript } from './crawlTarget'
 import { script as mangaUpdateScript } from './mangaUpdate'
+import { script as usersScript } from './users'
 
 let db: Database
 
@@ -13,8 +14,8 @@ const script = async () => {
   db = await Database.getInstance()
 
   const crawlTargets = await crawlTargetScript()
-
   const mangaUpdates = await mangaUpdateScript(crawlTargets)
+  const users = await usersScript()
 
   return
 }

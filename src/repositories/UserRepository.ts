@@ -10,6 +10,26 @@ interface SQLUser {
 }
 
 namespace UserRepository {
+  const get = async (key: 'username' | 'user_id' = 'user_id', value: string): Promise<User | null> => {
+    const db = await Database.getInstance()
+
+    const result: QueryResult<SQLUser> = await db.query({
+      text: `SELECT * FROM users WHERE ${key} = $1`,
+      values: [
+        value,
+      ]
+    })
+  
+    if (result.rows[0]) {
+      return User.fromSQL(result.rows[0])
+    } else {
+      return null
+    }
+  }
+
+  export const getById = (id: string) => get('user_id', id)
+  export const getByUsername = (username: string) => get('username', username)
+
   export const insert = async (user: Omit<IUser, 'userId'>): Promise<User> => {
     const db = await Database.getInstance()
 

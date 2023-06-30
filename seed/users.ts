@@ -34,12 +34,12 @@ const script = async (): Promise<User[]> => {
   const additionalUsers = [
     {
       username: "admin1",
-      passwordHash: "strongpassword",
+      password: "strongpassword",
       lockout: true,
     },
     {
       username: "admin2",
-      passwordHash: "weakpassword",
+      password: "weakpassword",
       lockout: false,
     }
   ]
@@ -53,7 +53,7 @@ const script = async (): Promise<User[]> => {
       lockout: faker.datatype.boolean(),
     })
   }).concat(additionalUsers.map(async (user) => {
-    const hash = await argon2.hash(faker.internet.password())
+    const hash = await argon2.hash(user.password)
 
     return UserRepository.insert({
       ...user,

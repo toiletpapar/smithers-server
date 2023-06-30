@@ -1,25 +1,19 @@
 import { Strategy as LocalStrategy } from 'passport-local'
 import * as argon2 from 'argon2'
-import { User, UserInfo } from './user'
+import { UserInfo } from '../../models/User'
+import { UserRepository } from '../../repositories/UserRepository'
 
 // Resolves to a user if validation was successful, otherwise false
 const validate = async (username: string, password: string): Promise<UserInfo | null> => {
-  // TODO: Actually create users collection
-  // Get user
-  const user: User = {
-    user_id: username,
-    password_hash: '$argon2id$v=19$m=65536,t=3,p=4$fvWgxyDz+MsQJzgQCCMSbw$wxllJac4zklDcWy4uodKs7AnRMTWD8/SwSnK+5TaOdI',
-    lockout: false
+  const user = await UserRepository.getByUsername(username)
+
+  if (!user) {
+    return user
   }
 
   // Verify the password
-  if (await argon2.verify(user.password_hash, password)) {
-    const userInfo: UserInfo = {
-      userId: user.user_id,
-      lockout: user.lockout
-    }
-  
-    return userInfo
+  if (await argon2.verify(user.getObject().passwordHash, password)) {
+    return user.getUserInfo()
   } else {
     return null
   }

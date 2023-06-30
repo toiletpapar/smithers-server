@@ -24,7 +24,7 @@ class MangaUpdate {
     chapterName: string().defined().nullable(),
     isRead: boolean().required(),
     readAt: string().url().required()
-  }).strict(true)
+  }).noUnknown().strict(true)
 
   public constructor(data: IMangaUpdate) {
     this.data = data
@@ -62,7 +62,7 @@ class MangaUpdate {
     const validatedProperties = await this.propertiesSchema.validate(properties)
 
     // Validate the data against the specified properties, erroring on any unidentified properties
-    const validationSchema = this.dataSchema.pick(validatedProperties).noUnknown().strict(true)
+    const validationSchema = this.dataSchema.pick(validatedProperties)
     const validatedData = await validationSchema.validate(data, {abortEarly: false})
     const coercedData: Partial<IMangaUpdate> = {}
 

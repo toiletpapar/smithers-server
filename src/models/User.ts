@@ -4,8 +4,9 @@ interface IUser {
   userId: string;
   username: string;
   passwordHash: string;
-  lockout: boolean;
+  lockout: boolean; // TODO: Implement
 }
+type UserInfo = Omit<IUser, 'passwordHash' | 'lockout'>
 
 class User {
   private data: IUser;
@@ -29,6 +30,13 @@ class User {
     }
   }
 
+  public getUserInfo(): UserInfo {
+    return {
+      userId: this.data.userId,
+      username: this.data.username,
+    }
+  }
+
   public serialize() {
     return {
       ...this.data,
@@ -39,4 +47,5 @@ class User {
 export {
   User,
   IUser,
+  UserInfo
 }

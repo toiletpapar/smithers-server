@@ -28,7 +28,7 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Kubernetes
 * CI tools for automatic deployment
 
-## Deployment
+## Deployment (local)
 Cluster of two nodes:
 * Pi
 * Laptop
@@ -44,6 +44,12 @@ Currently manually deploy server on pi
 Currently manually deploy database on laptop
 When deploying the psql database remember to:
 * Update the pg_hba.conf file for remote access
+
+## Deployment (cloud)
+* GKE Autopilot
+  * psql container (internal service/stateful set/volumes)
+  * webserver container (external service)
+  * crawler containers (crons)
 
 ## TODO
 * Follow recommendations from https://www.postgresql.org/docs/current/populate.html for seeding

@@ -3,14 +3,14 @@ import { Database } from '../database/Database'
 import { IUser, User } from '../models/User';
 
 interface SQLUser {
-  user_id: string;
+  user_id: number;
   username: string;
   password_hash: string;
   lockout: boolean;
 }
 
 namespace UserRepository {
-  const get = async (key: 'username' | 'user_id' = 'user_id', value: string): Promise<User | null> => {
+  const get = async (key: 'username' | 'user_id' = 'user_id', value: string | number): Promise<User | null> => {
     const db = await Database.getInstance()
 
     const result: QueryResult<SQLUser> = await db.query({
@@ -27,7 +27,7 @@ namespace UserRepository {
     }
   }
 
-  export const getById = (id: string) => get('user_id', id)
+  export const getById = (id: number) => get('user_id', id)
   export const getByUsername = (username: string) => get('username', username)
 
   export const insert = async (user: Omit<IUser, 'userId'>): Promise<User> => {

@@ -27,7 +27,7 @@ class CrawlTarget {
     adapter: mixed<CrawlerTypes>().oneOf(Object.values(CrawlerTypes)).required(),
     lastCrawledOn: string().defined().nullable().test('is-iso8601', 'Value must be in ISO8601 format or null', (input) => input === null || isISO8601(input)),
     crawlSuccess: boolean().defined().nullable(),
-  }).noUnknown().strict(true)
+  }).noUnknown()
 
   public constructor(data: ICrawlTarget) {
     this.data = data
@@ -57,12 +57,12 @@ class CrawlTarget {
     })
   }
 
-  public static async validateRequest(data: any, properties: string[]): Promise<Partial<ICrawlTarget>> {
+  public static async validateRequest(data: any, properties: string[], strict: boolean = true): Promise<Partial<ICrawlTarget>> {
     // Validate properties provided by the request
     const validatedProperties = await this.propertiesSchema.validate(properties)
 
     // Validate the data against the specified properties, erroring on any unidentified properties
-    const validationSchema = this.dataSchema.pick(validatedProperties)
+    const validationSchema = this.dataSchema.pick(validatedProperties).strict(strict)
     const validatedData = await validationSchema.validate(data, {abortEarly: false})
     const coercedData: Partial<ICrawlTarget> = {}
 

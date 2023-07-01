@@ -10,6 +10,8 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Linter (Done)
 * Database (Done)
 * Seeding (Done)
+* Authentication (Done)
+* Permissions
 == Manga ==
 * Add crawling functionality for automatic updates to clients
 * Data Processing API

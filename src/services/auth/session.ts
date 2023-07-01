@@ -6,7 +6,7 @@ import { UserRepository } from '../../repositories/UserRepository';
 import { SecretClient } from '../../secrets/SecretClient';
 
 interface SessionInfo {
-  user_id: string;
+  user_id: number;
 }
 
 const getSessionMiddleware = async () => {

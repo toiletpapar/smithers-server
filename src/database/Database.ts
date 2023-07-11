@@ -34,9 +34,13 @@ class Database {
   }
 
   public static async getInstance(): Promise<Database> {
+    if (!process.env.DB_SECRET_NAME) {
+      throw new Error('DB secret name not provided')
+    }
+
     if (!Database.db) {
       const client = await SecretClient.getInstance()
-      const connectionString = await client.getSecret({secretName: 'local-psql'})
+      const connectionString = await client.getSecret({secretName: process.env.DB_SECRET_NAME})
 
       if (!connectionString) {
         throw new Error('Unable to retrieve psql credentials')

@@ -12,13 +12,16 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Seeding (Done)
 * Authentication (Done)
 * Permissions
+
 == Manga ==
 * Add crawling functionality for automatic updates to clients
 * Data Processing API
+
 == Budgeting ==
 * Image Recognition API (Done)
 * Build a small demo client to understand image recognition (Done)
 * Matching algo with business directory API
+
 == Other ==
 * Automated Testing
 * Build a small Android client or Web app
@@ -26,9 +29,10 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Secure connection with Let's Encrypt
 * Containerization
 * Kubernetes
+* Use arm64 instead of amd64
 * CI tools for automatic deployment
 
-## Deployment (local)
+## Deployment Setup (local)
 Cluster of two nodes:
 * Pi
 * Laptop
@@ -45,11 +49,17 @@ Currently manually deploy database on laptop
 When deploying the psql database remember to:
 * Update the pg_hba.conf file for remote access
 
-## Deployment (cloud)
+## Deployment Setup (cloud)
+* Update secrets for multiple enviornments
+* Containerize database, server, crawlers
+* Configure artifact repository
 * GKE Autopilot
   * psql container (internal service/stateful set/volumes)
   * webserver container (external service)
   * crawler containers (crons)
+  * NGINX Ingress
+* Certificate (Let's Encrypt)
+* See toiletpapar/infrastructure for details
 
 ## TODO
 * Follow recommendations from https://www.postgresql.org/docs/current/populate.html for seeding

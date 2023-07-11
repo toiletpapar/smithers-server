@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc -w",
-    "seed": "set GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json && ts-node ./seed/seed.ts",
-    "devWin": "set GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json && nodemon --max_old_space_size=500 ./build/server.js",
-    "start": "GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json node --max_old_space_size=500 ./build/server.js"
+    "seed": "set \"GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json\" & set \"DB_SECRET_NAME=local-psql\"&& ts-node ./seed/seed.ts",
+    "devWin": "set \"GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json\" & set \"DB_SECRET_NAME=local-psql\"&& nodemon --max_old_space_size=500 ./build/server.js",
+    "start": "node --max_old_space_size=500 ./build/server.js"
   },
   "repository": {
     "type": "git",

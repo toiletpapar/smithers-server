@@ -18,7 +18,6 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CRE
 const initializeServer = async () => {
   // Setup
   app.use(express.json())
-  app.use(express.static('demo'))
 
   // Auth
   passport.use(localStrategy)
@@ -68,6 +67,7 @@ const initializeServer = async () => {
   })
 
   // Everything else
+  app.use(express.static('demo'))
   app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../demo/index.html'))
   })

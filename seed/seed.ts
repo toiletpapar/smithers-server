@@ -20,7 +20,7 @@ const script = async () => {
   return
 }
 
-// GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json npx ts-node seed/seed.ts
+// GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json DB_SECRET_NAME=local-psql npx ts-node seed/seed.ts
 script().then(() => {
   console.log('Successfully seeded')
 }).catch((err) => {

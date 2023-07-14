@@ -3,6 +3,8 @@ import { faker } from '@faker-js/faker'
 import { CrawlTarget, CrawlerTypes } from '../src/models/CrawlTarget'
 import { CrawlTargetRepository } from '../src/repositories/CrawlTargetRepository'
 import seedConf from '../data/seed.json'
+import { getSchemaSQL } from './utils'
+import path from 'path'
 
 let db: Database
 
@@ -24,25 +26,10 @@ const script = async (): Promise<CrawlTarget[]> => {
   `)
 
   console.log('Creating enum...')
-  await db.query(`
-    CREATE TYPE crawler_types AS ENUM (
-      'webtoon',
-      'mangadex'
-    );
-  `)
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/crawler_types.sql')))
 
   console.log('Creating table...')
-  await db.query(`
-    CREATE TABLE crawl_target (
-      crawl_target_id INT GENERATED ALWAYS AS IDENTITY,
-      name VARCHAR(100) UNIQUE NOT NULL,
-      url TEXT NOT NULL,
-      adapter crawler_types NOT NULL,
-      last_crawled_on TIMESTAMPTZ,
-      crawl_success BOOLEAN,
-      PRIMARY KEY(crawl_target_id)
-    );
-  `)
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/crawl_target.sql')))
 
   console.log('Inserting data...')
   return Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {

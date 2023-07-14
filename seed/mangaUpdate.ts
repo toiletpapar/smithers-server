@@ -4,6 +4,8 @@ import { MangaUpdate } from '../src/models/MangaUpdate'
 import { CrawlTarget } from '../src/models/CrawlTarget'
 import { MangaUpdateRepository } from '../src/repositories/MangaUpdateRepository'
 import seedConf from '../data/seed.json'
+import { getSchemaSQL } from './utils'
+import path from 'path'
 
 let db: Database
 
@@ -38,22 +40,7 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
   `)
 
   console.log('Creating table...')
-  await db.query(`
-    CREATE TABLE manga_update (
-      manga_update_id INT GENERATED ALWAYS AS IDENTITY,
-      crawl_target_id INT NOT NULL,
-      crawled_on TIMESTAMPTZ NOT NULL,
-      chapter SMALLINT NOT NULL,
-      chapter_name TEXT,
-      is_read BOOLEAN NOT NULL,
-      read_at TEXT NOT NULL,
-      PRIMARY KEY(manga_update_id),
-      CONSTRAINT fk_crawl_target
-        FOREIGN KEY(crawl_target_id)
-          REFERENCES crawl_target(crawl_target_id)
-          ON DELETE CASCADE
-    );
-  `)
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/manga_update.sql')))
 
   console.log('Inserting data...')
   const randomCrawlTargets: CrawlTarget[] = removeRandomElements(crawlTargets, Math.round(seedConf.NUM_CRAWL_TARGETS * seedConf.CRAWL_TARGETS_WITHOUT_UPDATES))

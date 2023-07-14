@@ -4,6 +4,8 @@ import { User } from '../src/models/User'
 import * as argon2 from 'argon2'
 import { UserRepository } from '../src/repositories/UserRepository'
 import seedConf from '../data/seed.json'
+import { getSchemaSQL } from './utils'
+import path from 'path'
 
 let db: Database
 
@@ -20,15 +22,7 @@ const script = async (): Promise<User[]> => {
   `)
 
   console.log('Creating table...')
-  await db.query(`
-    CREATE TABLE users (
-      user_id INT GENERATED ALWAYS AS IDENTITY,
-      username VARCHAR(100) UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      lockout BOOLEAN NOT NULL,
-      PRIMARY KEY(user_id)
-    );
-  `)
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/users.sql')))
 
   console.log('Inserting data...')
   const additionalUsers = [

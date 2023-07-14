@@ -22,7 +22,7 @@ const script = async (): Promise<User[]> => {
   `)
 
   console.log('Creating table...')
-  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/users.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/001_users.sql')))
 
   console.log('Inserting data...')
   const additionalUsers = [

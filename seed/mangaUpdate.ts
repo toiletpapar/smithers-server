@@ -40,7 +40,7 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
   `)
 
   console.log('Creating table...')
-  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/manga_update.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/004_manga_update.sql')))
 
   console.log('Inserting data...')
   const randomCrawlTargets: CrawlTarget[] = removeRandomElements(crawlTargets, Math.round(seedConf.NUM_CRAWL_TARGETS * seedConf.CRAWL_TARGETS_WITHOUT_UPDATES))

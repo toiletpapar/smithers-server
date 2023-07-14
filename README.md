@@ -11,7 +11,8 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Database (Done)
 * Seeding (Done)
 * Authentication (Done)
-* Permissions
+* Add auth strategy for tokens 
+* RBAC for crawler data
 
 == Manga ==
 * Add crawling functionality for automatic updates to clients

@@ -13,9 +13,9 @@ const script = async () => {
 
   db = await Database.getInstance()
 
+  const users = await usersScript()
   const crawlTargets = await crawlTargetScript()
   const mangaUpdates = await mangaUpdateScript(crawlTargets)
-  const users = await usersScript()
 
   return
 }

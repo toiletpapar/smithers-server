@@ -2,6 +2,8 @@ import { Database } from '../src/database/Database'
 import { script as crawlTargetScript } from './crawlTarget'
 import { script as mangaUpdateScript } from './mangaUpdate'
 import { script as usersScript } from './users'
+import seedConf from '../data/seed.json'
+import userSeed from '../data/users.json'
 
 let db: Database
 
@@ -13,7 +15,7 @@ const script = async () => {
 
   db = await Database.getInstance()
 
-  const users = await usersScript()
+  const users = await usersScript({numRandomUsers: seedConf.NUM_RANDOM_USERS, additionalUsers: userSeed, shouldClear: true})
   const crawlTargets = await crawlTargetScript()
   const mangaUpdates = await mangaUpdateScript(crawlTargets)
 

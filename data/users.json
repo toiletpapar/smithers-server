@@ -1,0 +1,12 @@
+[
+  {
+    "username": "admin1",
+    "password": "strongpassword",
+    "lockout": true
+  },
+  {
+    "username": "admin2",
+    "password": "weakpassword",
+    "lockout": false
+  }
+]

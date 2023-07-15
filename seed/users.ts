@@ -42,7 +42,7 @@ const script = async (config: SeedUserConfig): Promise<void[]> => {
   return Promise.all(Array.from({length: config.numRandomUsers}).map(async () => {
     const hashedPassword = await hash(faker.internet.password())
 
-    console.log(hash)
+    console.log(hashedPassword)
 
     // return UserRepository.insert({
     //   username: faker.internet.userName(),
@@ -52,7 +52,7 @@ const script = async (config: SeedUserConfig): Promise<void[]> => {
   }).concat(config.additionalUsers.map(async (user) => {
     const hashedPassword = await hash(user.password)
 
-    console.log(hash)
+    console.log(hashedPassword)
 
     // return UserRepository.insert({
     //   ...user,

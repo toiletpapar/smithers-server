@@ -18,15 +18,20 @@ const script = async () => {
 }
 
 // GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json DB_SECRET_NAME=local-psql npx ts-node seed/addUsers.ts
-script().then(() => {
+script().then(async () => {
   console.log('Successfully seeded user accounts')
-}).catch((err) => {
-  console.log('Failed to seed')
-  console.log(err)
-}).finally(async () => {
-  console.log('Cleaning up seeding scripts...')
 
   if (db) {
     await db.end()
   }
+}).catch(async (err) => {
+  console.log('Failed to seed')
+  console.log(err)
+
+  if (db) {
+    await db.end()
+  }
+
+  // Rethrow to get proper reporting in k8s
+  throw err
 })

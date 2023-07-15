@@ -6,7 +6,7 @@ import { UserRepository } from '../src/repositories/UserRepository'
 import { getSchemaSQL } from './utils'
 import path from 'path'
 
-let db: Database
+// let db: Database
 
 const DAY_IN_MILLIS = 1000*60*60*24
 
@@ -22,38 +22,42 @@ interface SeedUserConfig {
   shouldClear: boolean  // Clears the existing table if it exists
 }
 
-const script = async (config: SeedUserConfig): Promise<User[]> => {
+const script = async (config: SeedUserConfig): Promise<void[]> => {
   console.log('Starting user seeding...')
 
-  db = await Database.getInstance()
+  // db = await Database.getInstance()
 
-  if (config.shouldClear) {
-    console.log('Dropping table...')
-    await db.query(`
-      DROP TABLE IF EXISTS users CASCADE;
-    `)
+  // if (config.shouldClear) {
+  //   console.log('Dropping table...')
+  //   await db.query(`
+  //     DROP TABLE IF EXISTS users CASCADE;
+  //   `)
 
-    console.log('Creating table...')
-    await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/001_users.sql')))
-  }
+  //   console.log('Creating table...')
+  //   await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/001_users.sql')))
+  // }
   
   console.log('Inserting data...')
 
   return Promise.all(Array.from({length: config.numRandomUsers}).map(async () => {
     const hashedPassword = await hash(faker.internet.password())
 
-    return UserRepository.insert({
-      username: faker.internet.userName(),
-      passwordHash: hashedPassword,
-      lockout: faker.datatype.boolean(),
-    })
+    console.log(hash)
+
+    // return UserRepository.insert({
+    //   username: faker.internet.userName(),
+    //   passwordHash: hashedPassword,
+    //   lockout: faker.datatype.boolean(),
+    // })
   }).concat(config.additionalUsers.map(async (user) => {
     const hashedPassword = await hash(user.password)
 
-    return UserRepository.insert({
-      ...user,
-      passwordHash: hashedPassword
-    })
+    console.log(hash)
+
+    // return UserRepository.insert({
+    //   ...user,
+    //   passwordHash: hashedPassword
+    // })
   })))
 }
 

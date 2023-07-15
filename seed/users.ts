@@ -34,7 +34,7 @@ const script = async (config: SeedUserConfig): Promise<void[]> => {
   //   `)
 
   //   console.log('Creating table...')
-  //   await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/001_users.sql')))
+  //   await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/001_users.sql')))
   // }
   
   console.log('Inserting data...')

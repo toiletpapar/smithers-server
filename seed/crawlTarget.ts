@@ -26,10 +26,10 @@ const script = async (): Promise<CrawlTarget[]> => {
   `)
 
   console.log('Creating enum...')
-  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/002_crawler_types.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/002_crawler_types.sql')))
 
   console.log('Creating table...')
-  await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/003_crawl_target.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/003_crawl_target.sql')))
 
   console.log('Inserting data...')
   return Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {

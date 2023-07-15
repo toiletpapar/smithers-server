@@ -1,14 +1,12 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { User } from '../src/models/User'
+import { IUser, User } from '../src/models/User'
 import { hash } from '../src/utils/hash'
 import { UserRepository } from '../src/repositories/UserRepository'
 import { getSchemaSQL } from './utils'
 import path from 'path'
 
 let db: Database
-
-const DAY_IN_MILLIS = 1000*60*60*24
 
 interface SeedUser {
   username: string,
@@ -34,7 +32,7 @@ const script = async (config: SeedUserConfig): Promise<User[]> => {
     `)
 
     console.log('Creating table...')
-    await db.query(await getSchemaSQL(path.resolve(__dirname, './schema/001_users.sql')))
+    await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/001_users.sql')))
   }
   
   console.log('Inserting data...')

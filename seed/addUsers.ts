@@ -10,7 +10,7 @@ const script = async () => {
   // fix any whitespace issues with set
   process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
 
-  // db = await Database.getInstance()
+  db = await Database.getInstance()
 
   const users = await usersScript({numRandomUsers: 0, additionalUsers: userSeed, shouldClear: false})
 

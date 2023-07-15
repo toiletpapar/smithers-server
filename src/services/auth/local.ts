@@ -1,7 +1,7 @@
 import { Strategy as LocalStrategy } from 'passport-local'
-import * as argon2 from 'argon2'
 import { UserInfo } from '../../models/User'
 import { UserRepository } from '../../repositories/UserRepository'
+import { verify } from '../../utils/hash'
 
 // Resolves to a user if validation was successful, otherwise false
 const validate = async (username: string, password: string): Promise<UserInfo | null> => {
@@ -12,7 +12,7 @@ const validate = async (username: string, password: string): Promise<UserInfo | 
   }
 
   // Verify the password
-  if (await argon2.verify(user.getObject().passwordHash, password, {memoryCost: 16384, parallelism: 2})) {
+  if (await verify(user.getObject().passwordHash, password)) {
     return user.getUserInfo()
   } else {
     return null

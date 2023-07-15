@@ -1,7 +1,7 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
 import { User } from '../src/models/User'
-import * as argon2 from 'argon2'
+import { hash } from '../src/utils/hash'
 import { UserRepository } from '../src/repositories/UserRepository'
 import { getSchemaSQL } from './utils'
 import path from 'path'
@@ -40,19 +40,19 @@ const script = async (config: SeedUserConfig): Promise<User[]> => {
   console.log('Inserting data...')
 
   return Promise.all(Array.from({length: config.numRandomUsers}).map(async () => {
-    const hash = await argon2.hash(faker.internet.password(), {memoryCost: 16384, parallelism: 2})
+    const hashedPassword = await hash(faker.internet.password())
 
     return UserRepository.insert({
       username: faker.internet.userName(),
-      passwordHash: hash,
+      passwordHash: hashedPassword,
       lockout: faker.datatype.boolean(),
     })
   }).concat(config.additionalUsers.map(async (user) => {
-    const hash = await argon2.hash(user.password)
+    const hashedPassword = await hash(user.password)
 
     return UserRepository.insert({
       ...user,
-      passwordHash: hash
+      passwordHash: hashedPassword
     })
   })))
 }

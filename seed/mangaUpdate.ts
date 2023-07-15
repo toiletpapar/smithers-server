@@ -4,26 +4,10 @@ import { MangaUpdate } from '../src/models/MangaUpdate'
 import { CrawlTarget } from '../src/models/CrawlTarget'
 import { MangaUpdateRepository } from '../src/repositories/MangaUpdateRepository'
 import seedConf from '../data/seed.json'
-import { getSchemaSQL } from './utils'
+import { getSchemaSQL, removeRandomElements } from './utils'
 import path from 'path'
 
 let db: Database
-
-const removeRandomElements = (arr: any[], times: number): any[] => {
-  if (times <= 0) {
-    return arr
-  } else {
-    const randomIndex = faker.datatype.number(arr.length - 1)
-
-    return removeRandomElements(
-      [
-        ...arr.slice(0, randomIndex),
-        ...arr.slice(randomIndex + 1)
-      ],
-      times - 1
-    )
-  }
-}
 
 const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
   console.log('Starting mangaUpdate seeding...')
@@ -46,10 +30,6 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
   const randomCrawlTargets: CrawlTarget[] = removeRandomElements(crawlTargets, Math.round(seedConf.NUM_CRAWL_TARGETS * seedConf.CRAWL_TARGETS_WITHOUT_UPDATES))
   return await Promise.all(Array.from({length: seedConf.NUM_MANGA_UPDATES}).map(() => {
     const crawlTarget = randomCrawlTargets[faker.datatype.number(randomCrawlTargets.length - 1)].getObject()
-
-    if (!crawlTarget.crawlTargetId) {
-      throw new Error('crawlTarget does not have a primary key')
-    }
 
     return MangaUpdateRepository.insert({
       crawlId: crawlTarget.crawlTargetId,

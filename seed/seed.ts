@@ -16,7 +16,7 @@ const script = async () => {
   db = await Database.getInstance()
 
   const users = await usersScript({numRandomUsers: seedConf.NUM_RANDOM_USERS, additionalUsers: userSeed, shouldClear: true})
-  const crawlTargets = await crawlTargetScript()
+  const crawlTargets = await crawlTargetScript(users)
   const mangaUpdates = await mangaUpdateScript(crawlTargets)
 
   return

@@ -2,8 +2,10 @@ import { Request, Response, NextFunction } from 'express'
 import { UserRepository } from '../../repositories/UserRepository'
 import { User } from '../../models/User'
 
+// Note: No ACL
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // TODO: Use options model
     const {userId} = await User.validateRequest({userId: req.params.userId}, ['userId'], false)
 
     if (!userId) {

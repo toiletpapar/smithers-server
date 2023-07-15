@@ -41,7 +41,7 @@ const serializeUser = async (user: any, done: (err: any, id?: SessionInfo) => vo
   done(null, {user_id: user.userId})
 }
 
-const deserializeUser = async (sessionInfo: SessionInfo, done: (err: any, id?: UserInfo | boolean) => void) => {
+const deserializeUser = async (sessionInfo: SessionInfo, done: (err: any, id?: Express.User | false) => void) => {
   try {
     const user = await UserRepository.getById(sessionInfo.user_id)
 
@@ -58,5 +58,6 @@ const deserializeUser = async (sessionInfo: SessionInfo, done: (err: any, id?: U
 export {
   getSessionMiddleware,
   serializeUser,
-  deserializeUser
+  deserializeUser,
+  SessionInfo
 }

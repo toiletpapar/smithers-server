@@ -14,11 +14,12 @@ interface ICrawlTarget {
   adapter: CrawlerTypes; // The strategy to use to find the information when crawling
   lastCrawledOn: Date | null; // The date of the latest crawl
   crawlSuccess: boolean | null; // Whether the latest crawl logged data
+  userId: number; // the identifier of the owner of this target
 }
 
 class CrawlTarget {
   private data: ICrawlTarget;
-  static allProperties: (keyof ICrawlTarget)[] = ['crawlTargetId', 'name', 'url', 'adapter', 'lastCrawledOn', 'crawlSuccess']
+  static allProperties: (keyof ICrawlTarget)[] = ['crawlTargetId', 'name', 'url', 'adapter', 'lastCrawledOn', 'crawlSuccess', 'userId']
   private static propertiesSchema = array().of(string().oneOf(this.allProperties).defined()).defined().strict(true)
   private static dataSchema = object({
     crawlTargetId: number().required(),
@@ -27,6 +28,7 @@ class CrawlTarget {
     adapter: mixed<CrawlerTypes>().oneOf(Object.values(CrawlerTypes)).required(),
     lastCrawledOn: string().defined().nullable().test('is-iso8601', 'Value must be in ISO8601 format or null', (input) => input === null || isISO8601(input)),
     crawlSuccess: boolean().defined().nullable(),
+    userId: number().required()
   }).noUnknown()
 
   public constructor(data: ICrawlTarget) {
@@ -40,7 +42,8 @@ class CrawlTarget {
       url: data.url,
       adapter: data.adapter,
       lastCrawledOn: data.last_crawled_on,
-      crawlSuccess: data.crawl_success
+      crawlSuccess: data.crawl_success,
+      userId: data.user_id
     })
   }
 
@@ -53,7 +56,8 @@ class CrawlTarget {
       url: result.url,
       adapter: result.adapter,
       lastCrawledOn: result.lastCrawledOn,
-      crawlSuccess: result.crawlSuccess
+      crawlSuccess: result.crawlSuccess,
+      userId: result.userId
     })
   }
 

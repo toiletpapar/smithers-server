@@ -1,34 +1,31 @@
-import { object, string, array } from 'yup'
+import { object, number, array, string } from 'yup'
 
-interface IAuthUser {
-  username: string;
-  password: string;
+interface ICrawlTargetListOptions {
+  userId: number;
 }
 
-class AuthUser {
-  private data: IAuthUser;
-  static allProperties: (keyof IAuthUser)[] = ['username', 'password']
+class CrawlTargetListOptions {
+  private data: ICrawlTargetListOptions;
+  static allProperties: (keyof ICrawlTargetListOptions)[] = ['userId']
   private static propertiesSchema = array().of(string().oneOf(this.allProperties).defined()).defined().strict(true)
   private static dataSchema = object({
-    username: string().max(100).required(),
-    password: string().required()
+    userId: number().required(),
   }).noUnknown().strict(true)
 
-  public constructor(data: IAuthUser) {
+  public constructor(data: ICrawlTargetListOptions) {
     this.data = data
   }
 
   public static async fromRequest(data: any) {
-    const result = (await this.validateRequest(data, this.allProperties)) as IAuthUser
+    const result = (await this.validateRequest(data, this.allProperties)) as ICrawlTargetListOptions
 
     return new this({
-      username: result.username,
-      password: result.password
+      userId: result.userId
     })
   }
 
   // Validates the provided data against the properties specified, returning a coerced partial object
-  public static async validateRequest(data: any, properties: string[], strict: boolean = true): Promise<Partial<IAuthUser>> {
+  public static async validateRequest(data: any, properties: string[], strict: boolean = true): Promise<Partial<ICrawlTargetListOptions>> {
     // Validate properties provided by the request
     const validatedProperties = await this.propertiesSchema.validate(properties)
 
@@ -39,7 +36,7 @@ class AuthUser {
     return validatedData
   }
 
-  public getObject(): IAuthUser {
+  public getObject(): ICrawlTargetListOptions {
     return {
       ...this.data
     }
@@ -47,6 +44,6 @@ class AuthUser {
 }
 
 export {
-  AuthUser,
-  IAuthUser,
+  CrawlTargetListOptions,
+  ICrawlTargetListOptions,
 }

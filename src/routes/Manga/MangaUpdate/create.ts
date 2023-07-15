@@ -6,6 +6,7 @@ import { removeItem } from '../../../utils/arrayUtils'
 
 const createMangaUpdate = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // TODO: Add machine-to-machine authentication, disallow other forms of authentication
     const data = await MangaUpdate.validateRequest(req.body, removeItem(MangaUpdate.allProperties, 'mangaUpdateId')) as Omit<IMangaUpdate, 'mangaUpdateId'>
     const mangaUpdate = await MangaUpdateRepository.insert(data)
     const serializedMangaUpdate = mangaUpdate.serialize()

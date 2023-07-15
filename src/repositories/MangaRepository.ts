@@ -3,6 +3,7 @@ import { SQLCrawlTarget } from "../repositories/CrawlTargetRepository";
 import { SQLMangaUpdate } from "../repositories/MangaUpdateRepository";
 import { Database } from "../database/Database";
 import { Manga } from "../models/Manga";
+import { MangaListOptions } from "../models/MangaListOptions";
 
 // Manga - Represented in SQL
 interface SQLManga {
@@ -10,27 +11,14 @@ interface SQLManga {
   manga_updates: SQLMangaUpdate[];
 }
 
-interface MangaListOptions {
-  onlyLatest?: Boolean
-}
-
 namespace MangaRepository {
-  const defaultListOptions: MangaListOptions = {
-    onlyLatest: true
-  }
-  
-  export const list = async (options: MangaListOptions): Promise<Manga[]> => {
+  export const list = async (opts: MangaListOptions): Promise<Manga[]> => {
     const db = await Database.getInstance()
-  
-    const opts = {
-      ...defaultListOptions,
-      ...options
-    }
   
     let results: QueryResult<SQLManga>
   
     // TODO: Stored Procedures
-    if (opts.onlyLatest) {
+    if (opts.getObject().onlyLatest) {
       results = await db.query({
         text: `
           SELECT
@@ -39,32 +27,35 @@ namespace MangaRepository {
           FROM (
             SELECT
               json_build_object(
-                'crawl_target_id', crawl_target_id,
-                'name', name,
-                'url', url,
-                'adapter', adapter,
-                'last_crawled_on', last_crawled_on,
-                'crawl_success', crawl_success
+              'crawl_target_id', crawl_target_id,
+              'name', name,
+              'url', url,
+              'adapter', adapter,
+              'last_crawled_on', last_crawled_on,
+              'crawl_success', crawl_success,
+              'user_id', user_id
               ) crawler,
               CASE
-                WHEN manga_update_id IS NULL THEN ARRAY[]::json[]
-                ELSE ARRAY[json_build_object(
-                  'manga_update_id', manga_update_id,
-                  'chapter', chapter,
-                  'chapter_name', chapter_name,
-                  'crawled_on', crawled_on,
-                  'is_read', is_read,
-                  'read_at', read_at
-                  )]
+              WHEN manga_update_id IS NULL THEN ARRAY[]::json[]
+              ELSE ARRAY[json_build_object(
+                'manga_update_id', manga_update_id,
+                'chapter', chapter,
+                'chapter_name', chapter_name,
+                'crawled_on', crawled_on,
+                'is_read', is_read,
+                'read_at', read_at
+                )]
               END AS manga_updates,
               row_number() OVER (PARTITION BY crawl_target_id order by crawled_on DESC) as _rn
             FROM crawl_target
-            LEFT JOIN manga_update
-            USING (crawl_target_id)
+              LEFT JOIN manga_update
+              USING (crawl_target_id)
+            WHERE user_id = $1
             ORDER BY crawl_target_id
           ) x
           WHERE _rn = 1;
-        `
+        `,
+        values: [opts.getObject().userId]
       })
     } else {
       results = await db.query({
@@ -76,7 +67,8 @@ namespace MangaRepository {
               'url', url,
               'adapter', adapter,
               'last_crawled_on', last_crawled_on,
-              'crawl_success', crawl_success
+              'crawl_success', crawl_success,
+              'user_id', user_id
             ) crawler,
             COALESCE(
               json_agg(
@@ -94,9 +86,11 @@ namespace MangaRepository {
           FROM crawl_target
           LEFT JOIN manga_update
           USING (crawl_target_id)
+          WHERE user_id = $1
           GROUP BY crawl_target_id
           ORDER BY crawl_target_id;
         `,
+        values: [opts.getObject().userId]
       })
     }
   
@@ -121,6 +115,5 @@ namespace MangaRepository {
 
 export {
   SQLManga,
-  MangaListOptions,
   MangaRepository
 }

@@ -1,24 +1,12 @@
-import { ValidationError, object, string } from 'yup'
-import { MangaListOptions, MangaRepository } from '../../repositories/MangaRepository'
+import { ValidationError } from 'yup'
+import { MangaRepository } from '../../repositories/MangaRepository'
 import { Request, Response, NextFunction } from 'express'
-import { decodeBoolean } from '../../utils/decodeQuery'
-
-const querySchema = object({
-  onlyLatest: string().oneOf(['true', 'false']).optional(),
-}).strict(true)
+import { MangaListOptions } from '../../models/MangaListOptions'
 
 const listMangas = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const params = await querySchema.validate(req.query, {abortEarly: false})
-    
-    // massage
-    const listOptions: MangaListOptions = {}
-
-    if (decodeBoolean(params.onlyLatest) !== undefined) {
-      listOptions.onlyLatest = decodeBoolean(params.onlyLatest)
-    }
-
-    const mangas = await MangaRepository.list(listOptions)
+    const options = await MangaListOptions.fromRequest({...req.query, userId: req.user?.userId})
+    const mangas = await MangaRepository.list(options)
     const serializedMangas = mangas.map((manga) => manga.serialize())
 
     res.status(200).json(serializedMangas)

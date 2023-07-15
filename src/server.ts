@@ -4,7 +4,7 @@ import { apiRouter } from './routes'
 import { ImageClient } from './vision/Vision'
 import passport from 'passport'
 import { localStrategy } from './services/auth/local'
-import { deserializeUser, serializeUser, getSessionMiddleware } from './services/auth/session'
+import { deserializeUser, serializeUser, getSessionMiddleware, SessionInfo } from './services/auth/session'
 import { AuthUser } from './models/AuthUser'
 import { ValidationError } from 'yup'
 import crypto from 'crypto'
@@ -29,7 +29,7 @@ const initializeServer = async () => {
     '/auth/v1/login',
     async (req, res, next) => {
       try {
-        await AuthUser.validate(req.body)
+        const user = await AuthUser.fromRequest(req.body)
 
         next()
       } catch (err: any) {

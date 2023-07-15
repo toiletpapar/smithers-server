@@ -6,7 +6,7 @@
   },
   {
     "username": "admin2",
-    "password": "weakpassword",
+    "password": "strongpassword",
     "lockout": false
   }
 ]

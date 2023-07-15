@@ -12,7 +12,7 @@ const validate = async (username: string, password: string): Promise<UserInfo | 
   }
 
   // Verify the password
-  if (await argon2.verify(user.getObject().passwordHash, password, {memoryCost: 32768, parallelism: 2})) {
+  if (await argon2.verify(user.getObject().passwordHash, password, {memoryCost: 16384, parallelism: 2})) {
     return user.getUserInfo()
   } else {
     return null

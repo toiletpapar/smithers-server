@@ -40,7 +40,7 @@ const script = async (config: SeedUserConfig): Promise<User[]> => {
   console.log('Inserting data...')
 
   return Promise.all(Array.from({length: config.numRandomUsers}).map(async () => {
-    const hash = await argon2.hash(faker.internet.password())
+    const hash = await argon2.hash(faker.internet.password(), {memoryCost: 32768, parallelism: 2})
 
     return UserRepository.insert({
       username: faker.internet.userName(),

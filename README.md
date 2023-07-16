@@ -65,3 +65,5 @@ When deploying the psql database remember to:
 ## TODO
 * Follow recommendations from https://www.postgresql.org/docs/current/populate.html for seeding
 * Use Stored Procedures
+* Allowing sharing entities given permissions
+* Refactor DB & SecretClient to parent package: used in smithers-server && smithers-crawler

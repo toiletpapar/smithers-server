@@ -1,6 +1,6 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { IUser, User } from '../src/models/User'
+import { User } from '../src/models/User'
 import { hash } from '../src/utils/hash'
 import { UserRepository } from '../src/repositories/UserRepository'
 import { getSchemaSQL } from './utils'

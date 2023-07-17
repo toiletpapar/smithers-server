@@ -4,6 +4,8 @@ import { script as mangaUpdateScript } from './mangaUpdate'
 import { script as usersScript } from './users'
 import seedConf from '../data/seed.json'
 import userSeed from '../data/users.json'
+import crawlerSeed from '../data/crawlers.json'
+import { CrawlerTypes } from '@ca-tyler/smithers-server-utils'
 
 let db: Database
 
@@ -16,7 +18,14 @@ const script = async () => {
   db = await Database.getInstance()
 
   const users = await usersScript({numRandomUsers: seedConf.NUM_RANDOM_USERS, additionalUsers: userSeed, shouldClear: true})
-  const crawlTargets = await crawlTargetScript(users)
+  const crawlTargets = await crawlTargetScript({
+    users,
+    additionalCrawlers: crawlerSeed.map((crawler) => {
+    return {
+      ...crawler,
+      adapter: crawler.adapter as CrawlerTypes
+    }})
+  })
   const mangaUpdates = await mangaUpdateScript(crawlTargets)
 
   return

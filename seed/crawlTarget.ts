@@ -1,6 +1,6 @@
 import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { CrawlTarget, CrawlerTypes } from '../src/models/CrawlTarget'
+import { CrawlTarget, CrawlerTypes, ICrawlTarget } from '../src/models/CrawlTarget'
 import { CrawlTargetRepository } from '../src/repositories/CrawlTargetRepository'
 import seedConf from '../data/seed.json'
 import { getSchemaSQL, removeRandomElements } from './utils'
@@ -12,7 +12,12 @@ let db: Database
 
 const DAY_IN_MILLIS = 1000*60*60*24
 
-const script = async (users: User[]): Promise<CrawlTarget[]> => {
+interface SeedCrawlTargetConfig {
+  users: User[]
+  additionalCrawlers: Omit<ICrawlTarget, "crawlTargetId" | "userId">[]
+}
+
+const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => {
   console.log('Starting crawlTarget seeding...')
 
   db = await Database.getInstance()
@@ -35,9 +40,9 @@ const script = async (users: User[]): Promise<CrawlTarget[]> => {
 
   console.log('Inserting data...')
 
-  const fixedUsers = users.filter((el) => fixedUsersJson.some((fixedUser) => el.getObject().username === fixedUser.username))
+  const fixedUsers = config.users.filter((el) => fixedUsersJson.some((fixedUser) => el.getObject().username === fixedUser.username))
   const randomUsers: User[] = removeRandomElements(
-    users.filter((el) => fixedUsers.every((fixedUser) => el.getObject().username !== fixedUser.getObject().username)), // Remove fixed users
+    config.users.filter((el) => fixedUsers.every((fixedUser) => el.getObject().username !== fixedUser.getObject().username)), // Remove fixed users
     Math.round(seedConf.NUM_RANDOM_USERS * seedConf.USERS_WITHOUT_CRAWL_TARGETS)  // Remove random non-fixed users
   ).concat(fixedUsers)  // Add back fixed users
   return Promise.all(Array.from({length: seedConf.NUM_CRAWL_TARGETS}).map(() => {
@@ -52,7 +57,14 @@ const script = async (users: User[]): Promise<CrawlTarget[]> => {
       crawlSuccess: isCrawled ? faker.datatype.boolean() : null,
       userId: user.userId
     })
-  }))
+  }).concat(config.additionalCrawlers.map((crawler) => {
+    const user = randomUsers[faker.datatype.number(randomUsers.length - 1)].getObject()
+
+    return CrawlTargetRepository.insert({
+      ...crawler,
+      userId: user.userId
+    })
+  })))
 }
 
 export { script }

@@ -3,12 +3,13 @@ import { IMangaUpdate, MangaUpdate } from '../../../models/MangaUpdate'
 import { Request, Response, NextFunction } from 'express'
 import { MangaUpdateRepository } from '../../../repositories/MangaUpdateRepository'
 import { removeItem } from '../../../utils/arrayUtils'
+import { Database } from '../../../database/Database'
 
 const createMangaUpdate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // TODO: Add machine-to-machine authentication, disallow other forms of authentication
     const data = await MangaUpdate.validateRequest(req.body, removeItem(MangaUpdate.allProperties, 'mangaUpdateId')) as Omit<IMangaUpdate, 'mangaUpdateId'>
-    const mangaUpdate = await MangaUpdateRepository.insert(data)
+    const mangaUpdate = await MangaUpdateRepository.insert(await Database.getInstance(), data)
     const serializedMangaUpdate = mangaUpdate.serialize()
 
     res.status(201).json(serializedMangaUpdate)

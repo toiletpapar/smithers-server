@@ -31,7 +31,7 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
   return await Promise.all(Array.from({length: seedConf.NUM_MANGA_UPDATES}).map(() => {
     const crawlTarget = randomCrawlTargets[faker.datatype.number(randomCrawlTargets.length - 1)].getObject()
 
-    return MangaUpdateRepository.insert({
+    return MangaUpdateRepository.insert(db, {
       crawlId: crawlTarget.crawlTargetId,
       crawledOn: faker.datatype.datetime(),
       chapter: faker.datatype.number(32766),

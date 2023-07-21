@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { CrawlTargetRepository } from '../../repositories/CrawlTargetRepository'
 import { CrawlTarget, ICrawlTarget } from '../../models/CrawlTarget'
 import { removeItems } from '../../utils/arrayUtils'
+import { Database } from '../../database/Database'
 
 const createCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,7 +11,7 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
       {...req.body, userId: req.user?.userId},
       removeItems(CrawlTarget.allProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess'])
     ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess'>
-    const crawlTarget = await CrawlTargetRepository.insert({
+    const crawlTarget = await CrawlTargetRepository.insert(await Database.getInstance(), {
       ...data,
       lastCrawledOn: null,
       crawlSuccess: null

@@ -49,7 +49,7 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
     const isCrawled = faker.datatype.boolean()
     const user = randomUsers[faker.datatype.number(randomUsers.length - 1)].getObject()
 
-    return CrawlTargetRepository.insert({
+    return CrawlTargetRepository.insert(db, {
       name: faker.lorem.words(3),
       url: faker.internet.url(),
       adapter: (['webtoon', 'mangadex'] as CrawlerTypes[])[faker.datatype.number(1)],
@@ -60,7 +60,7 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
   }).concat(config.additionalCrawlers.map((crawler) => {
     const user = randomUsers[faker.datatype.number(randomUsers.length - 1)].getObject()
 
-    return CrawlTargetRepository.insert({
+    return CrawlTargetRepository.insert(db, {
       ...crawler,
       userId: user.userId
     })

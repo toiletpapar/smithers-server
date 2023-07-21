@@ -1,7 +1,7 @@
 Some quick starter templates and reminders for setting up new psql servers
 
 * setup your PGDATA env variable for your data directory
-* use `initdb`
+* use `initdb -E UTF8 -U developer -W`
 * use `pg_ctl start/stop` to help manage your server
 * modify authentication through pg_hba.conf
 * setup users with:

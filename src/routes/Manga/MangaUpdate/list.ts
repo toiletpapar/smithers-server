@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { MangaUpdateRepository } from '../../../repositories/MangaUpdateRepository'
-import { MangaUpdateListOptions } from '../../../models/MangaUpdateListOptions'
+import { MangaUpdateRepository, MangaUpdateListOptions, Database } from '@ca-tyler/smithers-server-utils'
 import { ValidationError } from 'yup'
-import { Database } from '../../../database/Database'
 
 const listMangaUpdate = async (req: Request, res: Response, next: NextFunction) => {
   try {

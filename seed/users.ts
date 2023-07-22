@@ -1,4 +1,4 @@
-import { Database } from '../src/database/Database'
+import { Database } from '@ca-tyler/smithers-server-utils'
 import { faker } from '@faker-js/faker'
 import { User } from '../src/models/User'
 import { hash } from '../src/utils/hash'

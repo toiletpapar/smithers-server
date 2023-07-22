@@ -1,4 +1,4 @@
-import { Database } from '../src/database/Database'
+import { Database } from '@ca-tyler/smithers-server-utils'
 import { script as usersScript } from './users'
 import userSeed from '../credentials/prodUsers.json'
 

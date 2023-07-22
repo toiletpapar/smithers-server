@@ -1,9 +1,7 @@
 import { ValidationError } from 'yup'
-import { IMangaUpdate, MangaUpdate } from '../../../models/MangaUpdate'
+import { IMangaUpdate, MangaUpdate, MangaUpdateRepository, Database } from '@ca-tyler/smithers-server-utils'
 import { Request, Response, NextFunction } from 'express'
-import { MangaUpdateRepository } from '../../../repositories/MangaUpdateRepository'
 import { removeItem } from '../../../utils/arrayUtils'
-import { Database } from '../../../database/Database'
 
 const createMangaUpdate = async (req: Request, res: Response, next: NextFunction) => {
   try {

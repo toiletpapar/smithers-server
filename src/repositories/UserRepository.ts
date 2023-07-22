@@ -1,5 +1,5 @@
 import { QueryResult } from 'pg'
-import { Database } from '../database/Database'
+import { Database } from '@ca-tyler/smithers-server-utils'
 import { IUser, User } from '../models/User';
 
 interface SQLUser {

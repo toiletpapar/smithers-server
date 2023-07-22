@@ -1,11 +1,10 @@
-import { Database } from '../src/database/Database'
 import { script as crawlTargetScript } from './crawlTarget'
 import { script as mangaUpdateScript } from './mangaUpdate'
 import { script as usersScript } from './users'
 import seedConf from '../data/seed.json'
 import userSeed from '../data/users.json'
 import crawlerSeed from '../data/crawlers.json'
-import { CrawlerTypes } from '@ca-tyler/smithers-server-utils'
+import { CrawlerTypes, Database } from '@ca-tyler/smithers-server-utils'
 
 let db: Database
 

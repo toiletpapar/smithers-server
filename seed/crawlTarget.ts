@@ -1,7 +1,5 @@
-import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { CrawlTarget, CrawlerTypes, ICrawlTarget } from '../src/models/CrawlTarget'
-import { CrawlTargetRepository } from '../src/repositories/CrawlTargetRepository'
+import { CrawlTarget, CrawlerTypes, ICrawlTarget, CrawlTargetRepository, Database } from '@ca-tyler/smithers-server-utils'
 import seedConf from '../data/seed.json'
 import { getSchemaSQL, removeRandomElements } from './utils'
 import path from 'path'

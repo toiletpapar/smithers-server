@@ -1,7 +1,6 @@
 import { ValidationError } from 'yup'
-import { MangaRepository } from '../../repositories/MangaRepository'
+import { MangaRepository, MangaListOptions } from '@ca-tyler/smithers-server-utils'
 import { Request, Response, NextFunction } from 'express'
-import { MangaListOptions } from '../../models/MangaListOptions'
 
 const listMangas = async (req: Request, res: Response, next: NextFunction) => {
   try {

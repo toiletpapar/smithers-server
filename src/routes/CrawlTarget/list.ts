@@ -1,8 +1,6 @@
 import { ValidationError } from 'yup'
-import { CrawlTargetListOptions } from '../../models/CrawlTargetListOptions'
-import { CrawlTargetRepository } from '../../repositories/CrawlTargetRepository'
+import { CrawlTargetListOptions, CrawlTargetRepository, Database } from '@ca-tyler/smithers-server-utils'
 import { Request, Response, NextFunction } from 'express'
-import { Database } from '../../database/Database'
 
 const listCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {

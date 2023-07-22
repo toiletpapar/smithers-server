@@ -1,9 +1,7 @@
 import { ValidationError } from 'yup'
 import { Request, Response, NextFunction } from 'express'
-import { CrawlTargetRepository } from '../../repositories/CrawlTargetRepository'
-import { CrawlTarget, ICrawlTarget } from '../../models/CrawlTarget'
+import { CrawlTargetRepository, CrawlTarget, ICrawlTarget, Database } from '@ca-tyler/smithers-server-utils'
 import { removeItems } from '../../utils/arrayUtils'
-import { Database } from '../../database/Database'
 
 const createCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {

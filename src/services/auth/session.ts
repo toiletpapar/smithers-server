@@ -1,7 +1,6 @@
 import PGStore from 'connect-pg-simple'
 import ExpressSession from 'express-session'
-import { Database } from '../../database/Database'
-import { UserInfo } from '../../models/User'
+import { Database } from '@ca-tyler/smithers-server-utils'
 import { UserRepository } from '../../repositories/UserRepository';
 import { SecretClient } from '../../secrets/SecretClient';
 

@@ -1,8 +1,5 @@
-import { Database } from '../src/database/Database'
 import { faker } from '@faker-js/faker'
-import { MangaUpdate } from '../src/models/MangaUpdate'
-import { CrawlTarget } from '../src/models/CrawlTarget'
-import { MangaUpdateRepository } from '../src/repositories/MangaUpdateRepository'
+import { MangaUpdate, CrawlTarget, MangaUpdateRepository, Database } from '@ca-tyler/smithers-server-utils'
 import seedConf from '../data/seed.json'
 import { getSchemaSQL, removeRandomElements } from './utils'
 import path from 'path'
@@ -34,7 +31,7 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
     return MangaUpdateRepository.insert(db, {
       crawlId: crawlTarget.crawlTargetId,
       crawledOn: faker.datatype.datetime(),
-      chapter: faker.datatype.number(32766),
+      chapter: faker.datatype.float({min: 0, max: 9999, precision: 0.1}),
       chapterName: faker.datatype.boolean() ? faker.lorem.words(5) : null,
       isRead: faker.datatype.boolean(),
       readAt: faker.internet.url()

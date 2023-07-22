@@ -46,7 +46,7 @@ namespace MangaRepository {
                 'read_at', read_at
                 )]
               END AS manga_updates,
-              row_number() OVER (PARTITION BY crawl_target_id order by crawled_on DESC) as _rn
+              row_number() OVER (PARTITION BY crawl_target_id order by chapter DESC) as _rn
             FROM crawl_target
               LEFT JOIN manga_update
               USING (crawl_target_id)

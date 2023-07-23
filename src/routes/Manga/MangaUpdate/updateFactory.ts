@@ -5,10 +5,9 @@ import { removeItem } from '../../../utils/arrayUtils'
 
 const updateMangaUpdateFactory = (properties: Exclude<(keyof IMangaUpdate),'mangaUpdateId' | 'crawlId' | 'chapter'>[]) => async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // TODO: allow only specific users to update specific mangaUpdate
     const {mangaUpdateId} = await MangaUpdate.validateRequest({mangaUpdateId: req.params.mangaUpdateId}, ['mangaUpdateId'], false) as Pick<IMangaUpdate, 'mangaUpdateId'>
     const data = await MangaUpdate.validateRequest(req.body, properties) as Partial<Omit<IMangaUpdate, 'mangaUpdateId' | 'crawlId' | 'chapter'>>
-    const mangaUpdate = await MangaUpdateRepository.update(await Database.getInstance(), mangaUpdateId, data)
+    const mangaUpdate = await MangaUpdateRepository.update(await Database.getInstance(), mangaUpdateId, data, req.user?.userId)
 
     if (mangaUpdate) {
       const serializedMangaUpdate = mangaUpdate.serialize()

@@ -1,11 +1,12 @@
 import { ValidationError } from 'yup'
-import { MangaRepository, MangaListOptions } from '@ca-tyler/smithers-server-utils'
+import { MangaRepository, MangaListOptions, Database } from '@ca-tyler/smithers-server-utils'
 import { Request, Response, NextFunction } from 'express'
 
 const listMangas = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const db = await Database.getInstance()
     const options = await MangaListOptions.fromRequest({...req.query, userId: req.user?.userId})
-    const mangas = await MangaRepository.list(options)
+    const mangas = await MangaRepository.list(db, options)
     const serializedMangas = mangas.map((manga) => manga.serialize())
 
     res.status(200).json(serializedMangas)

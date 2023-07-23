@@ -7,7 +7,7 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
   try {
     const data = await CrawlTarget.validateRequest(
       {...req.body, userId: req.user?.userId},
-      removeItems(CrawlTarget.allProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess'])
+      removeItems(CrawlTarget.allRequestProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess'])
     ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess'>
     const crawlTarget = await CrawlTargetRepository.insert(await Database.getInstance(), {
       ...data,

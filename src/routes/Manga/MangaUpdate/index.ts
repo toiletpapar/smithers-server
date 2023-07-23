@@ -5,7 +5,7 @@ import { updateMangaUpdateFactory } from './updateFactory'
 const mangaUpdateRouter = express.Router()
 
 mangaUpdateRouter.get('/', listMangaUpdate)
-mangaUpdateRouter.patch('/:mangaUpdateId/isRead', updateMangaUpdateFactory(['isRead']))
+mangaUpdateRouter.put('/:mangaUpdateId/isRead', updateMangaUpdateFactory(['isRead']))
 
 export {
   mangaUpdateRouter

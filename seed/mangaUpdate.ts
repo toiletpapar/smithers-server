@@ -34,7 +34,8 @@ const script = async (crawlTargets: CrawlTarget[]): Promise<MangaUpdate[]> => {
       chapter: faker.datatype.float({min: 0, max: 9999, precision: 0.1}),
       chapterName: faker.datatype.boolean() ? faker.lorem.words(5) : null,
       isRead: faker.datatype.boolean(),
-      readAt: faker.internet.url()
+      readAt: faker.internet.url(),
+      dateCreated: faker.datatype.datetime()
     })
   }))
 }

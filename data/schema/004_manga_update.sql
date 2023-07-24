@@ -2,6 +2,7 @@ CREATE TABLE manga_update (
   manga_update_id INT GENERATED ALWAYS AS IDENTITY,
   crawl_target_id INT NOT NULL,
   crawled_on TIMESTAMPTZ NOT NULL,
+  date_created TIMESTAMPTZ NOT NULL,
   chapter NUMERIC(5,1) NOT NULL,
   chapter_name TEXT,
   is_read BOOLEAN NOT NULL,

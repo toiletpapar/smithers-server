@@ -51,7 +51,7 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
       name: faker.lorem.words(3),
       url: faker.internet.url(),
       adapter: (['webtoon', 'mangadex'] as CrawlerTypes[])[faker.datatype.number(1)],
-      lastCrawledOn: isCrawled ? faker.datatype.datetime({min: Date.now() - DAY_IN_MILLIS*5, max: Date.now() + DAY_IN_MILLIS*5}) : null,
+      lastCrawledOn: isCrawled ? faker.datatype.datetime({min: Date.now() - DAY_IN_MILLIS*10, max: Date.now() + DAY_IN_MILLIS*10}) : null,
       crawlSuccess: isCrawled ? faker.datatype.boolean() : null,
       userId: user.userId
     })

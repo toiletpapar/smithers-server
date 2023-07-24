@@ -6,6 +6,9 @@ const syncManga = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const db = await Database.getInstance()
     const options = await MangaSyncOptions.fromRequest({crawlTargetId: req.params.crawlTargetId, userId: req.user?.userId}, false)
+
+    // Possibly long-running, depending on the parse and source
+    // TODO: Consider workers, or spawning jobs in k8s
     await MangaRepository.syncManga(db, options)
 
     res.sendStatus(200)

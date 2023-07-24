@@ -2,7 +2,7 @@
   "name": "budgeting-server",
   "version": "1.0.0",
   "description": "Using image recognition for budget analysis",
-  "main": "server.ts",
+  "main": "./build/src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -35,7 +35,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@ca-tyler/smithers-server-utils": "^1.1.5",
+    "@ca-tyler/smithers-server-utils": "^1.1.6",
     "@google-cloud/secret-manager": "^4.1.4",
     "@google-cloud/vision": "^3.0.1",
     "argon2": "^0.30.3",

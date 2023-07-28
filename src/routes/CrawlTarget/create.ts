@@ -14,7 +14,7 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
       lastCrawledOn: null,
       crawlSuccess: null
     })
-    const serializedCrawlTarget = crawlTarget.serialize()
+    const serializedCrawlTarget = await crawlTarget.serialize()
 
     res.status(201).json(serializedCrawlTarget)
   } catch (err: any) {

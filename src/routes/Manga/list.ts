@@ -7,7 +7,7 @@ const listMangas = async (req: Request, res: Response, next: NextFunction) => {
     const db = await Database.getInstance()
     const options = await MangaListOptions.fromRequest({...req.query, userId: req.user?.userId})
     const mangas = await MangaRepository.list(db, options)
-    const serializedMangas = mangas.map((manga) => manga.serialize())
+    const serializedMangas = await Promise.all(mangas.map((manga) => manga.serialize()))
 
     res.status(200).json(serializedMangas)
   } catch (err: any) {

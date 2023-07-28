@@ -30,11 +30,12 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
     DROP TYPE IF EXISTS crawler_types;
   `)
 
-  console.log('Creating enum...')
+  console.log('Creating enums...')
   await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/002_crawler_types.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/003_image_formats.sql')))
 
   console.log('Creating table...')
-  await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/003_crawl_target.sql')))
+  await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/004_crawl_target.sql')))
 
   console.log('Inserting data...')
 
@@ -53,7 +54,9 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
       adapter: (['webtoon', 'mangadex'] as CrawlerTypes[])[faker.datatype.number(1)],
       lastCrawledOn: isCrawled ? faker.datatype.datetime({min: Date.now() - DAY_IN_MILLIS*10, max: Date.now() + DAY_IN_MILLIS*10}) : null,
       crawlSuccess: isCrawled ? faker.datatype.boolean() : null,
-      userId: user.userId
+      userId: user.userId,
+      coverImage: null,
+      coverFormat: null
     })
   }).concat(config.additionalCrawlers.map((crawler) => {
     const user = randomUsers[faker.datatype.number(randomUsers.length - 1)].getObject()

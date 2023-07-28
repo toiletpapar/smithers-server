@@ -13,7 +13,7 @@ const updateCrawlTargetFactory = (validProperties: Exclude<(keyof ICrawlTarget),
     const crawlTarget = await CrawlTargetRepository.update(await Database.getInstance(), crawlTargetId, data, userId)
 
     if (crawlTarget) {
-      const serializedCrawlTarget = crawlTarget.serialize()
+      const serializedCrawlTarget = await crawlTarget.serialize()
 
       return res.status(200).json(serializedCrawlTarget)
     } else {

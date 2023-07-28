@@ -8,7 +8,7 @@ const getCrawlTarget = async (req: Request, res: Response, next: NextFunction) =
     const crawlTarget = await CrawlTargetRepository.getById(await Database.getInstance(), options)
 
     if (crawlTarget) {
-      res.status(200).json(crawlTarget.serialize())
+      res.status(200).json(await crawlTarget.serialize())
     } else {
       return res.sendStatus(404)
     }

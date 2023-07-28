@@ -5,7 +5,9 @@ CREATE TABLE crawl_target (
   adapter crawler_types NOT NULL,
   last_crawled_on TIMESTAMPTZ,
   crawl_success BOOLEAN,
-  user_id INT,
+  user_id INT NOT NULL,
+  cover_image BYTEA,
+  cover_format image_types,
   PRIMARY KEY(crawl_target_id),
   UNIQUE(name, user_id),
   CONSTRAINT fk_user_id

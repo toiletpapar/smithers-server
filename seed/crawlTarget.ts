@@ -29,6 +29,9 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
   await db.query(`
     DROP TYPE IF EXISTS crawler_types;
   `)
+  await db.query(`
+    DROP TYPE IF EXISTS image_types;
+  `)
 
   console.log('Creating enums...')
   await db.query(await getSchemaSQL(path.resolve(__dirname, '../../data/schema/002_crawler_types.sql')))
@@ -56,7 +59,8 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
       crawlSuccess: isCrawled ? faker.datatype.boolean() : null,
       userId: user.userId,
       coverImage: null,
-      coverFormat: null
+      coverFormat: null,
+      favourite: faker.datatype.boolean()
     })
   }).concat(config.additionalCrawlers.map((crawler) => {
     const user = randomUsers[faker.datatype.number(randomUsers.length - 1)].getObject()

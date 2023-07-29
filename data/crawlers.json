@@ -6,7 +6,8 @@
     "lastCrawledOn": null,
     "crawlSuccess": null,
     "coverImage": null,
-    "coverFormat": null
+    "coverFormat": null,
+    "favourite": true
   },
   {
     "name": "The Shadow Prophet",
@@ -15,7 +16,8 @@
     "lastCrawledOn": null,
     "crawlSuccess": null,
     "coverImage": null,
-    "coverFormat": null
+    "coverFormat": null,
+    "favourite": true
   },
   {
     "name": "Kingdom",
@@ -24,6 +26,7 @@
     "lastCrawledOn": null,
     "crawlSuccess": null,
     "coverImage": null,
-    "coverFormat": null
+    "coverFormat": null,
+    "favourite": false
   }
 ]

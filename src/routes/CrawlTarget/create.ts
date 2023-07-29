@@ -7,12 +7,13 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
   try {
     const data = await CrawlTarget.validateRequest(
       {...req.body, userId: req.user?.userId},
-      removeItems(CrawlTarget.allRequestProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess'])
-    ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess'>
+      removeItems(CrawlTarget.allRequestProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess', 'favourite'])
+    ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess' | 'favourite'>
     const crawlTarget = await CrawlTargetRepository.insert(await Database.getInstance(), {
       ...data,
       lastCrawledOn: null,
-      crawlSuccess: null
+      crawlSuccess: null,
+      favourite: false
     })
     const serializedCrawlTarget = await crawlTarget.serialize()
 

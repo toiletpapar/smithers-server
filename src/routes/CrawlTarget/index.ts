@@ -3,10 +3,12 @@ import { createCrawlTarget } from './create'
 import { listCrawlTarget } from './list'
 import { updateCrawlTargetFactory } from './updateFactory'
 import { getCrawlTarget } from './get'
+import { searchCrawlTarget } from './search'
 
 const crawlTargetRouter = express.Router()
 
 crawlTargetRouter.get('/', listCrawlTarget)
+crawlTargetRouter.get('/search', searchCrawlTarget)
 crawlTargetRouter.get('/:crawlTargetId', getCrawlTarget)
 crawlTargetRouter.post('/', createCrawlTarget)
 crawlTargetRouter.patch('/:crawlTargetId', updateCrawlTargetFactory(['name', 'url', 'adapter']))

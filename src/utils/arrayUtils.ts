@@ -19,5 +19,5 @@ const removeItems = (arr: any[], items: any[]): any[] => {
 
 export {
   removeItem,
-  removeItems
+  removeItems,
 }

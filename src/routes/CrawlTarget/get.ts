@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express'
 
 const getCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const options: CrawlTargetGetOptions = await CrawlTargetGetOptions.fromRequest({userId: req.user?.userId, crawlTargetId: req.params.crawlTargetId}, false)
+    const options: CrawlTargetGetOptions = await CrawlTargetGetOptions.fromRequest({...req.query, userId: req.user?.userId, crawlTargetId: req.params.crawlTargetId}, false)
     const crawlTarget = await CrawlTargetRepository.getById(await Database.getInstance(), options)
 
     if (crawlTarget) {

@@ -4,7 +4,10 @@ import { Request, Response, NextFunction } from 'express'
 
 const listCrawlTarget = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const options: CrawlTargetListOptions = await CrawlTargetListOptions.fromRequest({userId: req.user?.userId})
+    const options: CrawlTargetListOptions = await CrawlTargetListOptions.fromRequest({
+      ...req.query,
+      userId: req.user?.userId,
+    })
     const crawlTargets = await CrawlTargetRepository.list(await Database.getInstance(), options)
     const serializedCrawlTargets = await Promise.all(crawlTargets.map((crawlTarget) => crawlTarget.serialize()))
 

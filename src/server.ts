@@ -132,17 +132,21 @@ const initializeServer = async () => {
       return next(err)
     }
 
-    const db = await Database.getInstance()
-    await LogRepository.insert(db, {
-      logType: LogTypes.SMITHERS_SERVER_ERROR,
-      explanation: "Smithers server catch-all caught unknown error",
-      info: {
-        error: err && err.stack ? err.stack : err
-      },
-      loggedOn: new Date()
-    })
-
-    res.sendStatus(500)
+    try {
+      const db = await Database.getInstance()
+      await LogRepository.insert(db, {
+        logType: LogTypes.SMITHERS_SERVER_ERROR,
+        explanation: "Smithers server catch-all caught unknown error",
+        info: {
+          error: err && err.stack ? err.stack : err
+        },
+        loggedOn: new Date()
+      })
+    } finally {
+      console.log(err)
+      res.sendStatus(500)
+      return
+    }
   })
 
   // Server start

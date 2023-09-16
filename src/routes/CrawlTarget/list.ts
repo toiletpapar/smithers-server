@@ -8,6 +8,7 @@ const listCrawlTarget = async (req: Request, res: Response, next: NextFunction) 
       ...req.query,
       userId: req.user?.userId,
     })
+
     const crawlTargets = await CrawlTargetRepository.list(await Database.getInstance(), options)
     const serializedCrawlTargets = await Promise.all(crawlTargets.map((crawlTarget) => crawlTarget.serialize()))
 

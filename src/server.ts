@@ -8,6 +8,7 @@ import { deserializeUser, serializeUser, getSessionMiddleware, SessionInfo } fro
 import { AuthUser } from './models/AuthUser'
 import { ValidationError } from 'yup'
 import crypto from 'crypto'
+import { Database, LogRepository, LogTypes } from '@ca-tyler/smithers-server-utils'
 
 const app = express()
 const port = 8080
@@ -123,6 +124,25 @@ const initializeServer = async () => {
   // Catch all
   app.use('*', (req, res) => {
     res.sendStatus(404)
+  })
+
+  // Catch-all error handler
+  app.use(async (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (res.headersSent) {
+      return next(err)
+    }
+
+    const db = await Database.getInstance()
+    await LogRepository.insert(db, {
+      logType: LogTypes.SMITHERS_SERVER_ERROR,
+      explanation: "Smithers server catch-all caught unknown error",
+      info: {
+        error: err && err.stack ? err.stack : err
+      },
+      loggedOn: new Date()
+    })
+
+    res.sendStatus(500)
   })
 
   // Server start

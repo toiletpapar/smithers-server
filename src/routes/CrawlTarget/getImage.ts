@@ -1,21 +1,35 @@
 import { ValidationError } from 'yup'
-import { CrawlTargetGetOptions, CrawlTargetRepository, Database } from '@ca-tyler/smithers-server-utils'
+import { CrawlTargetGetOptions, CrawlTargetRepository, Database, LogRepository, LogTypes } from '@ca-tyler/smithers-server-utils'
 import { Request, Response, NextFunction } from 'express'
 import fs from 'fs'
 import stream from 'stream'
 
 const getCrawlTargetImage = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const db = await Database.getInstance()
     const options: CrawlTargetGetOptions = await CrawlTargetGetOptions.fromRequest({userId: req.user?.userId, crawlTargetId: req.params.crawlTargetId, projectImage: true}, false)
-    const crawlTarget = await CrawlTargetRepository.getById(await Database.getInstance(), options)
+    const crawlTarget = await CrawlTargetRepository.getById(db, options)
 
     if (crawlTarget) {
-      const serialized = await crawlTarget.serialize()
+      const crawlTargetObj = await crawlTarget.getObject()
 
-      if (serialized.coverFormat && serialized.coverImage) {
+      if (crawlTargetObj.coverFormat && crawlTargetObj.coverImage) {
         const bufferStream = new stream.PassThrough()
-        bufferStream.end(serialized.coverImage)
-        res.setHeader('Content-Type', `image/${serialized.coverFormat}`).status(200)
+        bufferStream.end(crawlTargetObj.coverImage)
+
+        if (crawlTargetObj.coverSignature) {
+          res.setHeader('X-Smithers-Image-Signature', crawlTargetObj.coverSignature.toString('hex'))
+        } else {
+          // Report anomaly to logging
+          await LogRepository.insert(db, {
+            logType: LogTypes.SMITHERS_SERVER_WARN,
+            explanation: "Image signature is null even though an image was found",
+            info: crawlTargetObj,
+            loggedOn: new Date()
+          })
+        }
+
+        res.setHeader('Content-Type', `image/${crawlTargetObj.coverFormat}`).status(200)
         bufferStream.pipe(res)
         return
       } else {

@@ -8,6 +8,7 @@ CREATE TABLE crawl_target (
   user_id INT NOT NULL,
   cover_image BYTEA,
   cover_format image_types,
+  cover_signature BYTEA,
   favourite BOOLEAN NOT NULL,
   PRIMARY KEY(crawl_target_id),
   UNIQUE(name, user_id),

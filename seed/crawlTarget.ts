@@ -60,6 +60,7 @@ const script = async (config: SeedCrawlTargetConfig): Promise<CrawlTarget[]> => 
       userId: user.userId,
       coverImage: null,
       coverFormat: null,
+      coverSignature: null,
       favourite: faker.datatype.boolean()
     })
   }).concat(config.additionalCrawlers.map((crawler) => {

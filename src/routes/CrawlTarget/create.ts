@@ -8,15 +8,16 @@ const createCrawlTarget = async (req: Request, res: Response, next: NextFunction
     // TODO: Change to use an allow list of properties to validate against, similar to updateFactory
     const data = await CrawlTarget.validateRequest(
       {...req.body, userId: req.user?.userId},
-      removeItems(CrawlTarget.allRequestProperties, ['crawlTargetId', 'lastCrawledOn', 'crawlSuccess', 'favourite', 'coverImage', 'coverFormat'])
-    ) as Omit<ICrawlTarget, 'crawlTargetId' | 'lastCrawledOn' | 'crawlSuccess' | 'favourite' | 'coverImage' | 'coverFormat'>
+      ['name', 'adapter', 'url', 'userId']
+    ) as Pick<ICrawlTarget, 'name' | 'adapter' | 'url' | 'userId'>
     const crawlTarget = await CrawlTargetRepository.insert(await Database.getInstance(), {
       ...data,
       lastCrawledOn: null,
       crawlSuccess: null,
       favourite: false,
       coverFormat: null,
-      coverImage: null
+      coverImage: null,
+      coverSignature: null
     })
     const serializedCrawlTarget = await crawlTarget.serialize()
 

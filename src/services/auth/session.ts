@@ -2,7 +2,6 @@ import PGStore from 'connect-pg-simple'
 import ExpressSession from 'express-session'
 import { Database } from '@ca-tyler/smithers-server-utils'
 import { UserRepository } from '../../repositories/UserRepository';
-import { SecretClient } from '../../secrets/SecretClient';
 
 interface SessionInfo {
   user_id: number;
@@ -11,8 +10,7 @@ interface SessionInfo {
 const getSessionMiddleware = async () => {
   const SessionStore = PGStore(ExpressSession)
   const db = await Database.getInstance()
-  const client = await SecretClient.getInstance()
-  const sessionSecret = await client.getSecret({secretName: 'local-session'})
+  const sessionSecret = process.env.SESSION_KEY
 
   if (!sessionSecret) {
     throw new Error('Unable to find session secret')

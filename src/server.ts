@@ -8,13 +8,20 @@ import { deserializeUser, serializeUser, getSessionMiddleware, SessionInfo } fro
 import { AuthUser } from './models/AuthUser'
 import { ValidationError } from 'yup'
 import crypto from 'crypto'
-import { Database, LogRepository, LogTypes } from '@ca-tyler/smithers-server-utils'
+import { Database, LogRepository, LogTypes, SmithersError, SmithersErrorTypes } from '@ca-tyler/smithers-server-utils'
 
 const app = express()
 const port = 8080
 
-// fix any whitespace issues with set
-process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
+if (!process.env.DATABASE_CONNECTION_STRING) {
+  throw new SmithersError(SmithersErrorTypes.DB_CONNECTION_NOT_FOUND, "No db connection string provided")
+}
+if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  console.warn("GOOGLE_APPLICATION_CREDENTIALS was not provided")
+}
+if (!process.env.SESSION_KEY) {
+  throw new Error("SESSION_KEY was not provided")
+}
 
 const initializeServer = async () => {
   // Setup

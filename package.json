@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc -w",
-    "seed": "set \"GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json\" & set \"DB_SECRET_NAME=local-psql\"&& node ./build/seed/seed.js",
-    "devWin": "set \"GOOGLE_APPLICATION_CREDENTIALS=credentials/gcloud.json\" & set \"DB_SECRET_NAME=local-psql\"&& nodemon --max_old_space_size=500 ./build/src/server.js",
+    "seed": "node --env-file=.env ./build/seed/seed.js",
+    "dev": "nodemon --env-file=.env --max_old_space_size=500 ./build/src/server.js",
     "start": "node --max_old_space_size=500 ./build/src/server.js"
   },
   "repository": {
@@ -35,7 +35,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@ca-tyler/smithers-server-utils": "^1.1.12",
+    "@ca-tyler/smithers-server-utils": "^2.0.3",
     "@google-cloud/secret-manager": "^4.1.4",
     "@google-cloud/vision": "^3.0.1",
     "argon2": "^0.30.3",

@@ -5,9 +5,8 @@
   "root": true,
   "overrides": [
     {
-      "files": [ "demo/**/*.js" ],
       "env": {
-        "browser": true
+        "browser": false
       }
     }
   ]

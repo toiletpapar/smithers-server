@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import { apiRouter } from './routes'
-import { ImageClient } from './vision/Vision'
 import passport from 'passport'
 import { localStrategy } from './services/auth/local'
 import { deserializeUser, serializeUser, getSessionMiddleware, SessionInfo } from './services/auth/session'
@@ -75,11 +74,6 @@ const initializeServer = async () => {
   })
 
   // Everything else
-  app.use(express.static('demo'))
-  app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../demo/index.html'))
-  })
-
   app.get('/random-bytes', (req, res, next) => {
     crypto.randomBytes(64, (err, buf) => {
       if (err) {
@@ -88,41 +82,6 @@ const initializeServer = async () => {
         res.status(200).send(buf.toString('hex'));
       }
     })
-  })
-
-  app.post('/vision', async (req, res) => {
-    try {
-      let buf: Buffer
-
-      // FIXME: Read the file into memory, unbounded
-      req.on('data', (chunk) => {
-        if (buf) {
-          buf = Buffer.concat([buf, chunk])
-        } else {
-          buf = chunk
-        }
-      })
-
-      req.on('end', async () => {
-        console.log('done reading')
-
-        try {
-          const imageClient = await ImageClient.getInstance()
-          const response = await imageClient.textDetection(buf.toString('base64'))
-          res.json(response)
-        } catch (err) {
-          console.log(err)
-          res.sendStatus(500)
-        }
-      })
-
-      req.on('error', (err) => {
-        console.log(err)
-        res.sendStatus(500)
-      })
-    } catch (err) {
-      res.sendStatus(500)
-    }
   })
 
   // Routes

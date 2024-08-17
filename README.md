@@ -18,6 +18,8 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 == Manga ==
 * Add crawling functionality for automatic updates to clients (Done)
 * Data Processing API (Done)
+* Share lists with other users (a discovery page for everyone else's list). Only those that are "favourite"d will be shared. Can be turned off in settings.
+* Settings page
 
 == Budgeting ==
 * Image Recognition API (Done)
@@ -44,6 +46,15 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * E.g. Low frequency + high price + high rating + long way from home/work -> probably liked it or totally overrated
 * Rank restaurants by user_score and build a recommendation list that can be shared with friends
 
+== TV ==
+* Track lists of things you've watched
+* Can enrich with data from IMDB, etc
+
+== Lists ==
+* Create user-defined `{listName: string, items: {checked: boolean, value: string}[]}`
+* Create the ability to randomly select from the list
+* Add checkboxes to list (to form a TODO)
+
 == Other ==
 * Automated Testing
 * Build a small Android client or Web app (Done)
@@ -52,7 +63,7 @@ Ultimately would like to be able to build an assistant for helping in everyday l
 * Containerization (Done)
 * Kubernetes (Done)
 * Use arm64 instead of amd64 (depending on availability of hardware)
-* CI tools for automatic deployment
+* CI tools for automatic deploymentf
 
 ## Deployment Setup (local)
 See https://github.com/toiletpapar/smithers-infrastructure for baremetal setup.

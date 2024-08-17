@@ -36,8 +36,6 @@
   },
   "dependencies": {
     "@ca-tyler/smithers-server-utils": "^2.0.3",
-    "@google-cloud/secret-manager": "^4.1.4",
-    "@google-cloud/vision": "^3.0.1",
     "argon2": "^0.30.3",
     "bottleneck": "^2.19.5",
     "connect-pg-simple": "^9.0.0",

@@ -8,6 +8,7 @@ import { AuthUser } from './models/AuthUser'
 import { ValidationError } from 'yup'
 import crypto from 'crypto'
 import { Database, LogRepository, LogTypes, SmithersError, SmithersErrorTypes } from '@ca-tyler/smithers-server-utils'
+import cors from 'cors'
 
 const app = express()
 const port = 8080
@@ -25,6 +26,10 @@ if (!process.env.SESSION_KEY) {
 const initializeServer = async () => {
   // Setup
   app.use(express.json())
+  app.use(cors({
+    credentials: true,
+    origin: true
+  })) // Permissive
 
   // Auth
   passport.use(localStrategy)

@@ -8,7 +8,7 @@ const script = async () => {
   console.log('Started add users...')
 
   // fix any whitespace issues with set
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
+  // process.env.GOOGLE_APPLICATION_CREDENTIALS = (process.env.GOOGLE_APPLICATION_CREDENTIALS || '').trim()
 
   db = await Database.getInstance()
 
